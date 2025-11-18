@@ -23,6 +23,9 @@ const ServiceProviderDashboard = () => {
     price: "",
     categoryId: "",
   });
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [fileName, setFileName] = useState('');
   const [editingService, setEditingService] = useState(null);
 
   useEffect(() => {
@@ -45,12 +48,20 @@ const ServiceProviderDashboard = () => {
   const handleCreateService = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/provider/service", {
-        ...formData,
-        providerId: userInfo._id,
-      });
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('categoryId', formData.categoryId);
+      formDataToSend.append('providerId', userInfo._id);
+      if (photo) {
+        formDataToSend.append('photo', photo);
+      }
+      const response = await axios.post("http://localhost:5000/api/provider/service", formDataToSend);
       setServices([...services, response.data]);
       setFormData({ title: "", description: "", price: "", categoryId: "" });
+      setPhoto(null);
+      setPhotoPreview(null);
       setActiveTab("manageServices");
     } catch (error) {
       console.error("Error creating service:", error);
@@ -60,9 +71,23 @@ const ServiceProviderDashboard = () => {
   const handleUpdateService = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5000/api/provider/service/${editingService._id}`, formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('categoryId', formData.categoryId);
+      if (photo) {
+        formDataToSend.append('photo', photo);
+      }
+      const response = await axios.put(`http://localhost:5000/api/provider/service/${editingService._id}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setServices(services.map(s => s._id === editingService._id ? response.data : s));
       setFormData({ title: "", description: "", price: "", categoryId: "" });
+      setPhoto(null);
+      setPhotoPreview(null);
       setEditingService(null);
       setActiveTab("manageServices");
     } catch (error) {
@@ -86,6 +111,7 @@ const ServiceProviderDashboard = () => {
       price: service.price,
       categoryId: service.categoryId,
     });
+    setPhoto(null); // Reset photo for edit
     setEditingService(service);
     setActiveTab("createService");
   };
@@ -125,6 +151,7 @@ const ServiceProviderDashboard = () => {
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required
+            autoComplete="off"
           />
         </div>
         <div className="mb-3">
@@ -144,6 +171,7 @@ const ServiceProviderDashboard = () => {
             value={formData.price}
             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
             required
+            autoComplete="off"
           />
         </div>
         <div className="mb-3">
@@ -153,12 +181,43 @@ const ServiceProviderDashboard = () => {
             value={formData.categoryId}
             onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
             required
+            autoComplete="off"
           >
             <option value="">Select Category</option>
             {categories.map(c => (
               <option key={c._id} value={c._id}>{c.name}</option>
             ))}
           </select>
+        </div>
+        <div className="mb-3">
+          <label>Photo</label>
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              setPhoto(file);
+              if (file) {
+                setPhotoPreview(URL.createObjectURL(file));
+              }
+
+            }}
+          />
+          {photoPreview && (
+            <div className="mt-2">
+              <small>Selected Photo:</small>
+              <br />
+              <img src={photoPreview} alt="Selected photo" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+            </div>
+          )}
+          {editingService && editingService.photoURL && (
+            <div className="mt-2">
+              <small>Current Photo:</small>
+              <br />
+              <img src={`http://localhost:5000${editingService.photoURL}`} alt="Current service photo" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+            </div>
+          )}
         </div>
         <button type="submit" className="btn btn-primary">
           {editingService ? "Update Service" : "Create Service"}
@@ -170,6 +229,8 @@ const ServiceProviderDashboard = () => {
             onClick={() => {
               setEditingService(null);
               setFormData({ title: "", description: "", price: "", categoryId: "" });
+              setPhoto(null);
+              setPhotoPreview(null);
             }}
           >
             Cancel

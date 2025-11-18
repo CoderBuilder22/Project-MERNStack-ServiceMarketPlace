@@ -3,6 +3,7 @@ import connectDB from './config/db.js';
 import AuthRouter from './routes/AuthRoutes.js';
 import AdminRouter from './routes/AdminRoutes.js';
 import ProviderRouter from './routes/ProviderRoutes.js';
+import CustomerRouter from './routes/CustomerRoutes.js';
 import cors from "cors";
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cors({
 app.use('/api/auth', AuthRouter);
 app.use('/api/admin', AdminRouter);
 app.use('/api/provider', ProviderRouter);
+app.use('/api/customer', CustomerRouter);
 app.use('/images', express.static('public/images'));
 
 app.listen(port, () => {

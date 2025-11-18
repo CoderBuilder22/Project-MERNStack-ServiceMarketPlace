@@ -26,7 +26,9 @@ const Home = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/admin/categories");
+        const response = await axios.get(
+          "http://localhost:5000/api/admin/categories"
+        );
         setCategories(response.data.slice(0, 3));
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -49,29 +51,46 @@ const Home = () => {
                 Find Trusted Experts for Any Job on <span>ServiceHub</span>
               </h1>
               <p className="lead mb-4">
-                Hire skilled professionals or offer your services — all in one secure platform.
+                Hire skilled professionals or offer your services — all in one
+                secure platform.
               </p>
               <div className="search-info mb-4">
-                <input
-                  type="text"
-                  className="form-control form-control-lg mb-3"
-                  placeholder="Search for services..."
-                />
+                <button
+                  className="btn btn-primary btn-lg me-3"
+                  onClick={() => navigate(isLoggedIn ? "/service" : "/register")}
+                >
+                  {isLoggedIn ? "Explore Services" : "Get Started"}
+                </button>
               </div>
             </div>
             <div className="col-md-6">
               <div className="image-grid">
-                <img src="/images/homeImage1.jpg" alt="Home 1" className="img-fluid rounded grid-image" />
-                <img src="/images/homeImage2.jpg" alt="Home 2" className="img-fluid rounded grid-image" />
-                <img src="/images/homeImage3.jpg" alt="Home 3" className="img-fluid rounded grid-image" />
-                <img src="/images/homeImage4.jpg" alt="Home 4" className="img-fluid rounded grid-image" />
+                <img
+                  src="/images/homeImage1.jpg"
+                  alt="Home 1"
+                  className="img-fluid rounded grid-image"
+                />
+                <img
+                  src="/images/homeImage2.jpg"
+                  alt="Home 2"
+                  className="img-fluid rounded grid-image"
+                />
+                <img
+                  src="/images/homeImage3.jpg"
+                  alt="Home 3"
+                  className="img-fluid rounded grid-image"
+                />
+                <img
+                  src="/images/homeImage4.jpg"
+                  alt="Home 4"
+                  className="img-fluid rounded grid-image"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-    
       <section className="py-5 bg-light">
         <div className="container text-center">
           <h2 className="fw-bold mb-4">Why Choose ServiceHub?</h2>
@@ -83,7 +102,8 @@ const Home = () => {
                 </div>
                 <h5 className="fw-bold">Verified Professionals</h5>
                 <p className="text-muted">
-                  Every provider is verified to ensure safety and trust in every service booked.
+                  Every provider is verified to ensure safety and trust in every
+                  service booked.
                 </p>
               </div>
             </div>
@@ -94,7 +114,8 @@ const Home = () => {
                 </div>
                 <h5 className="fw-bold">Fast & Easy Booking</h5>
                 <p className="text-muted">
-                  Book a service in minutes using our simple and intuitive platform.
+                  Book a service in minutes using our simple and intuitive
+                  platform.
                 </p>
               </div>
             </div>
@@ -105,7 +126,8 @@ const Home = () => {
                 </div>
                 <h5 className="fw-bold">Secure Payments</h5>
                 <p className="text-muted">
-                  Pay confidently through our encrypted and reliable payment system.
+                  Pay confidently through our encrypted and reliable payment
+                  system.
                 </p>
               </div>
             </div>
@@ -113,7 +135,6 @@ const Home = () => {
         </div>
       </section>
 
-      
       <section className="py-5 bg-primary text-white">
         <div className="container text-center">
           <h2 className="fw-bold mb-4">ServiceHub in Numbers</h2>
@@ -153,19 +174,19 @@ const Home = () => {
           {loading ? (
             <p>Loading services...</p>
           ) : (
-            <div className="row g-4">
-              {categories.map((response) => (
-                <div key={response._id} className="col-md-4">
-                  <div className="card border-0 shadow-sm h-100">
-                    <div className="card-body">
-                      <i className="bi bi-tools text-primary fs-1 mb-3"></i>
-                      <h5 className="card-title fw-bold">{response.name}</h5>
-                      <button className="btn btn-primary">Book Now</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="d-flex justify-content-center gap-3 mb-4">
+                {categories.map((category) => (
+                  <button
+                    key={category._id}
+                    className="btn btn-outline-primary"
+                    onClick={() => navigate(`/service?category=${category._id}`)}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>

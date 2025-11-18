@@ -88,6 +88,13 @@ const NavBar = ({ setEnableTransition }) => {
             </>
           ) : (
             <>
+              {userInfo.role?.toLowerCase() === "customer" && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/service" onClick={() => setEnableTransition(true)}>
+                    Services
+                  </Link>
+                </li>
+              )}
               <li className="nav-item">
                 <Link className="nav-link" to={getDashboardLink()} onClick={() => setEnableTransition(true)}>
                   Dashboard

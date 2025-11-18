@@ -1,4 +1,4 @@
-/* Admin Dashboard Styles */
+/* Admin Dashboard Styles - Fixed Table Spacing */
 .admin-dashboard {
   background: linear-gradient(135deg, #1e3a5f 0%, #0f1419 100%);
   min-height: 100vh;
@@ -6,9 +6,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.admin-dashboard .container {
-  max-width: 1400px;
-}
+
 
 .admin-dashboard h2 {
   color: #fff;
@@ -81,7 +79,6 @@
 /* Overview Cards */
 .admin-dashboard .card {
   border: none;
-  border-radius: 16px;
   background: rgba(30,58,95,0.2);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(102,126,234,0.25);
@@ -128,22 +125,42 @@
   font-size: 0.95rem;
 }
 
-/* Tables */
+
 .admin-dashboard .table-responsive {
   background: rgba(30,58,95,0.2);
   border-radius: 16px;
-  padding: 0;
+  padding: 20px; 
   box-shadow: 0 8px 30px rgba(30,58,95,0.25);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(102,126,234,0.2);
   overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.admin-dashboard .table-responsive h5 {
+  margin-bottom: 20px; 
+}
+
+
+.admin-dashboard .table-responsive .d-flex {
+  background: rgba(30,58,95,0.25);
+  padding: 20px; 
+  border-radius: 12px;
+  margin-bottom: 20px; 
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(102,126,234,0.2);
+  box-shadow: 0 8px 25px rgba(30,58,95,0.2);
+}
+
+.admin-dashboard .table-responsive .d-flex .form-control {
+  margin-right: 10px; 
 }
 
 .admin-dashboard .table {
   margin-bottom: 0;
   color: #fff;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
 }
 
 .admin-dashboard .table thead th {
@@ -151,42 +168,54 @@
   color: #fff;
   border: none;
   font-weight: 600;
-  padding: 18px 20px;
+  padding: 12px 12px; 
   border-bottom: 2px solid rgba(102,126,234,0.3);
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.admin-dashboard .table tbody tr {
-  transition: all 0.3s ease;
-  border-bottom: 1px solid rgba(102,126,234,0.1);
-}
-
-.admin-dashboard .table tbody tr:last-child {
-  border-bottom: none;
-}
-
-.admin-dashboard .table tbody tr:hover {
-  background: rgba(102,126,234,0.15);
-  transform: scale(1.01);
+  text-align: left;
 }
 
 .admin-dashboard .table tbody td {
-  padding: 16px 20px;
+  padding: 12px 12px; 
   vertical-align: middle;
-  border-color: rgba(102,126,234,0.1);
+  border: none;
   font-weight: 500;
+  line-height: 1.4;
 }
 
-.admin-dashboard .badge {
-  font-size: 0.8rem;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+.admin-dashboard .table td, 
+.admin-dashboard .table th {
+  padding: 12px 12px; 
 }
 
+
+@media (max-width: 768px) {
+  .admin-dashboard .table-responsive {
+    padding: 15px; 
+    border-radius: 12px;
+  }
+
+  .admin-dashboard .table-responsive .d-flex {
+    padding: 15px; 
+    margin-bottom: 15px;
+  }
+
+  .admin-dashboard .table thead th,
+  .admin-dashboard .table tbody td {
+    padding: 10px 8px; 
+  }
+
+  .admin-dashboard .table-responsive .d-flex {
+    flex-direction: column;
+    gap: 10px; 
+  }
+
+  .admin-dashboard .table-responsive .d-flex .form-control {
+    margin-right: 0;
+    margin-bottom: 0; 
+  }
+}
 /* Buttons */
 .admin-dashboard .btn {
   border-radius: 25px;
@@ -268,6 +297,17 @@
 }
 
 /* Status Badges */
+.admin-dashboard .badge {
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: inline-block;
+  text-align: center;
+  min-width: 80px; /* Consistent badge width */
+}
+
 .admin-dashboard .badge-success {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: #fff;
@@ -321,6 +361,13 @@
   .admin-dashboard .btn {
     width: 100%;
     margin-bottom: 10px;
+  }
+
+  /* Mobile table adjustments */
+  .admin-dashboard .table thead th,
+  .admin-dashboard .table tbody td {
+    padding: 12px 10px; /* Reduced padding for mobile */
+    font-size: 0.9rem;
   }
 }
 

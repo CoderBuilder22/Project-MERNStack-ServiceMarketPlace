@@ -1,8 +1,8 @@
-# TODO for AuthController Register Validations
+# TODO: Add Search Bar Functionality
 
-- [x] Add email format validation using regex
-- [x] Add role validation: must be 'customer' or 'provider'
-- [x] Add phone (tel) validation: must be exactly 8 digits
-- [x] Add name validation: must be a non-empty string
-- [x] Add city validation: must be a non-empty string
-- [x] Make role required in initial check
+- [ ] Add search state and input field in Service.jsx
+- [ ] Implement search filtering logic for services by title/description
+- [ ] Add search bar in Home.jsx
+- [ ] Implement navigation from Home search to Service page with query parameter
+- [ ] Read query parameter in Service.jsx to set initial search term
+- [ ] Update CSS for search bar styling

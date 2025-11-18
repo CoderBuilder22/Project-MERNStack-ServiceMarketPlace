@@ -19,6 +19,8 @@ import CustomerDashboard from "./pages/dashboard/CustomerDashboard.jsx";
 import AdminDashboard from "./pages/dashboard/AdminDashboard.jsx";
 import ServiceProviderDashboard from "./pages/dashboard/ServiceProviderDashboard.jsx";
 
+import Service from "./pages/Service.jsx";
+
 function App() {
   const PrivateRoute = ({ children, role }) => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -43,6 +45,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/service" element={<Service />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
