@@ -3,40 +3,52 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%); /* Gradient background */
+  background: linear-gradient(135deg, #1e3a5f 0%, #45315a 100%);
   padding: 20px;
   animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .register-card {
-  background-color: #ffffff; /* White background */
+  background: linear-gradient(
+    135deg,
+    rgba(40, 65, 105, 0.95) 0%,
+    rgba(65, 45, 85, 0.95) 100%
+  );
   border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05); /* Enhanced shadows for depth */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
   padding: 40px;
   width: 100%;
   max-width: 400px;
   text-align: center;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .register-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #007bff, #0056b3);
+  background: linear-gradient(90deg, #4a7bbf, #8a6bbf);
 }
 
 .register-title {
-  color: #000000; /* Black text */
+  color: #ffffff;
   font-size: 2rem;
   margin-bottom: 30px;
   font-weight: bold;
@@ -51,115 +63,157 @@
 
 .register-input {
   width: 100%;
-  padding: 12px 15px 12px 40px; /* Extra padding for icon */
-  border: 1px solid #cccccc; /* Light gray border */
+  padding: 12px 15px 12px 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   font-size: 1rem;
-  color: #000000; /* Black text */
-  background-color: #ffffff; /* White background */
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   box-sizing: border-box;
   position: relative;
+  backdrop-filter: blur(5px);
 }
 
 .register-input:focus {
   outline: none;
-  border-color: #007bff; /* Blue accent on focus */
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #4a7bbf;
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 12px rgba(74, 123, 191, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
+}
+
+.register-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Icons using :before */
 .register-input[name="name"]::before {
-  content: '👤';
+  content: "👤";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="email"]::before {
-  content: '✉️';
+  content: "✉️";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="password"]::before {
-  content: '🔒';
+  content: "🔒";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="skills"]::before {
-  content: '🛠️';
+  content: "🛠️";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="bio"]::before {
-  content: '📝';
+  content: "📝";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.register-input[name="photoURL"]::before {
-  content: '📷';
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
+.file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.file-label {
+  display: inline-block;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #4a7bbf 0%, #8a6bbf 100%);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  border: none;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  background: linear-gradient(135deg, #5a8bcf 0%, #9a7bcf 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  flex: 1;
+}
+
+.register-input[name="photo"] {
+  display: none;
 }
 
 .register-input[name="city"]::before {
-  content: '🏙️';
+  content: "🏙️";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="tel"]::before {
-  content: '📞';
+  content: "📞";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-input[name="role"] {
   padding-left: 40px;
+  color: #ffffff;
 }
 
 .register-input[name="role"]::before {
-  content: '👥';
+  content: "👥";
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .register-button {
   width: 100%;
   padding: 12px 15px;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Gradient background */
-  color: #ffffff; /* White text */
+  background: linear-gradient(135deg, #4a7bbf 0%, #8a6bbf 100%);
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -167,31 +221,93 @@
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
 }
 
 .register-button:hover {
-  background: linear-gradient(135deg, #0056b3 0%, #004085 100%); /* Darker gradient on hover */
+  background: linear-gradient(135deg, #5a8bcf 0%, #9a7bcf 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .register-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .register-link {
-  color: #007bff;
+  color: #4a7bbf;
   text-decoration: none;
   font-size: 0.9rem;
   margin-top: 15px;
   transition: color 0.3s ease;
+  font-weight: 500;
 }
 
 .register-link:hover {
-  color: #0056b3;
+  color: #8a6bbf;
   text-decoration: underline;
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  margin-bottom: 0;
+  text-align: left;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #ff6b6b;
+}
+
+.select-role {
+  width: 100%;
+  padding: 12px 15px 12px 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  backdrop-filter: blur(5px);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.select-role:focus {
+  outline: none;
+  border-color: #4a7bbf;
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 12px rgba(74, 123, 191, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.select-role option {
+  background-color: #2a4a75;
+  color: #ffffff;
+  padding: 10px;
+}
+
+/* Role icon container */
+.role-input-container {
+  position: relative;
+}
+
+.role-input-container::before {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* Responsive design */
@@ -203,4 +319,13 @@
   .register-title {
     font-size: 1.5rem;
   }
+}
+
+.auth-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
 }

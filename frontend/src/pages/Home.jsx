@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Home.css";
 
 const Home = () => {
@@ -17,7 +18,25 @@ const Home = () => {
     return null;
   });
 
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const isLoggedIn = !!userInfo;
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/admin/categories");
+        setCategories(response.data.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="home-page">
@@ -27,7 +46,7 @@ const Home = () => {
           <div className="row align-items-center">
             <div className="col-md-6">
               <h1 className="display-4 fw-bold mb-3">
-                Find Trusted Experts for Any Job on <span className="text-primary">ServiceHub</span>
+                Find Trusted Experts for Any Job on <span>ServiceHub</span>
               </h1>
               <p className="lead mb-4">
                 Hire skilled professionals or offer your services — all in one secure platform.
@@ -127,42 +146,27 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Services */}
+      {/* All Services Section */}
       <section className="py-5 bg-light">
         <div className="container text-center">
-          <h2 className="fw-bold mb-4">Featured Services</h2>
-          <div className="row g-4">
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body">
-                  <i className="bi bi-house-door text-primary fs-1 mb-3"></i>
-                  <h5 className="card-title fw-bold">Home Cleaning</h5>
-                  <p className="card-text text-muted">Professional cleaning services for your home.</p>
-                  <button className="btn btn-primary">Learn More</button>
+          <h2 className="fw-bold mb-4">All Services</h2>
+          {loading ? (
+            <p>Loading services...</p>
+          ) : (
+            <div className="row g-4">
+              {categories.map((response) => (
+                <div key={response._id} className="col-md-4">
+                  <div className="card border-0 shadow-sm h-100">
+                    <div className="card-body">
+                      <i className="bi bi-tools text-primary fs-1 mb-3"></i>
+                      <h5 className="card-title fw-bold">{response.name}</h5>
+                      <button className="btn btn-primary">Book Now</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body">
-                  <i className="bi bi-tools text-primary fs-1 mb-3"></i>
-                  <h5 className="card-title fw-bold">Plumbing</h5>
-                  <p className="card-text text-muted">Expert plumbing repairs and installations.</p>
-                  <button className="btn btn-primary">Learn More</button>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body">
-                  <i className="bi bi-car-front text-primary fs-1 mb-3"></i>
-                  <h5 className="card-title fw-bold">Car Repair</h5>
-                  <p className="card-text text-muted">Reliable automotive repair services.</p>
-                  <button className="btn btn-primary">Learn More</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </div>

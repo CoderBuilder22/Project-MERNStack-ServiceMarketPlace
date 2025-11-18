@@ -55,7 +55,7 @@ export const getServicesByProvider = async (req, res) => {
     }
 };
 
-export default { createService, DeleteService, UpdateService, getServicesByProvider };
+
 
 // viewBookings()
 
@@ -64,3 +64,5 @@ export default { createService, DeleteService, UpdateService, getServicesByProvi
 // respondToBooking()
 
 // updateProfile()
+
+export default { createService, DeleteService, UpdateService, getServicesByProvider };

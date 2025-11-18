@@ -1,5 +1,8 @@
-# TODO: Add Styling to Images in Home Page Hero Section
+# TODO for AuthController Register Validations
 
-- [x] Update Home.css to add box-shadow to .grid-image for a shadow effect
-- [x] Add hover effect to .grid-image with scale transform and enhanced shadow
-- [ ] Test the styling by running the frontend to ensure shadows and hover effects work correctly
+- [x] Add email format validation using regex
+- [x] Add role validation: must be 'customer' or 'provider'
+- [x] Add phone (tel) validation: must be exactly 8 digits
+- [x] Add name validation: must be a non-empty string
+- [x] Add city validation: must be a non-empty string
+- [x] Make role required in initial check

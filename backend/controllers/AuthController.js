@@ -6,16 +6,39 @@ dotenv.config();
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, bio, skills, photoURL, city, tel } =
-      req.body;
+    const { name, email, password, role, bio, skills, city, tel } = req.body;
+    const photo = req.file ? req.file.path : null;
 
-    if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Name, email, and password are required" });
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
     }
 
-    const existingUser = await User.findOne({ email });
+  
+    if (role !== 'customer' && role !== 'provider') {
+      return res.status(400).json({ message: "Role must be 'customer' or 'provider'" });
+    }
+
+    if (!tel || !/^\d{8}$/.test(tel)) {
+      return res.status(400).json({ message: "Phone must be exactly 8 digits" });
+    }
+
+    
+    if (typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({ message: "Name must be a non-empty string" });
+    }
+
+    
+    if (typeof city !== 'string' || city.trim() === '') {
+      return res.status(400).json({ message: "City must be a non-empty string" });
+    }
+
+    if(password.trim()===''){
+      return res.status(400).json({ message: "Password cannot be empty or whitespace" });
+    }
+
+    const existingUser = await User.findOne({ email }) || await User.findOne({ tel });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -29,7 +52,7 @@ export const register = async (req, res) => {
       role,
       bio,
       skills,
-      photoURL,
+      photo,
       city,
       tel,
     });

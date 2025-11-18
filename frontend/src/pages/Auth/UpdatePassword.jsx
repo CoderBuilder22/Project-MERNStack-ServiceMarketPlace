@@ -35,6 +35,7 @@ const UpdatePassword = () => {
     <div className="update-container">
       <div className="update-card">
         <Form onSubmit={handleSubmit} className="update-form">
+          <img src="/service.png" alt="ServiceHub Logo" className="auth-logo" />
           <h2 className="update-title">Update Password</h2>
           <input
             type="password"

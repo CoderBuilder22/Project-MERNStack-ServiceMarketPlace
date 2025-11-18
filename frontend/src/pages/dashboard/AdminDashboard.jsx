@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaUsers, FaBoxOpen, FaTags, FaShoppingBag } from "react-icons/fa";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -247,9 +248,10 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="container my-4">
-      <h2 className="fw-bold">Admin Dashboard</h2>
-      <p className="text-muted">Manage users, services, and categories</p>
+    <div className="admin-dashboard">
+      <div className="container my-4">
+        <h2 className="fw-bold">Admin Dashboard</h2>
+        <p>Manage users, services, and categories</p>
 
       {/* Tabs */}
       <ul className="nav nav-tabs">
@@ -287,11 +289,12 @@ const AdminDashboard = () => {
         </li>
       </ul>
 
-      {/* Tab content */}
-      {activeTab === "overview" && <Overview />}
-      {activeTab === "users" && <UsersTable />}
-      {activeTab === "providers" && <ProvidersTable />}
-      {activeTab === "categories" && <CategoryTable />}
+        {/* Tab content */}
+        {activeTab === "overview" && <Overview />}
+        {activeTab === "users" && <UsersTable />}
+        {activeTab === "providers" && <ProvidersTable />}
+        {activeTab === "categories" && <CategoryTable />}
+      </div>
     </div>
   );
 };

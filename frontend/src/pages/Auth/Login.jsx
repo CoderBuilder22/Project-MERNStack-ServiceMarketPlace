@@ -39,6 +39,7 @@ const Login = () => {
     
       <div className="login-container">
       <div className="login-card">
+        <img src="/service.png" alt="ServiceHub Logo" className="auth-logo" />
         <h2 className="login-title">Login</h2>
         <form className="login-form" onSubmit={loginUser}>
           

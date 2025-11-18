@@ -1,9 +1,12 @@
 .footer {
-  background-color: #343a40;
-  color: #fff;
-  padding: 40px 0 20px;
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f1419 100%);
+  color: #ecf0f1;
+  padding: 50px 0 30px;
   margin-top: auto;
+  position: relative;
 }
+
+
 
 .footer-content {
   display: flex;
@@ -12,38 +15,109 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  position: relative;
 }
 
 .footer-section {
   flex: 1;
-  min-width: 200px;
-  margin-bottom: 20px;
+  min-width: 250px;
+  margin-bottom: 30px;
+  padding: 0 15px;
 }
 
 .footer-section h3 {
-  color: #f8f9fa;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
+  color: #ecf0f1;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: #3498db;
 }
 
 .footer-section p {
-  margin: 5px 0;
-  line-height: 1.6;
+  margin: 8px 0;
+  line-height: 1.7;
+  color: #bdc3c7;
+  font-size: 0.95rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 8px 0;
+}
+
+.footer-section ul li a {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #3498db;
 }
 
 .footer-bottom {
   text-align: center;
-  border-top: 1px solid #495057;
-  padding-top: 20px;
-  margin-top: 20px;
+  border-top: 1px solid #7f8c8d;
+  padding-top: 25px;
+  margin-top: 30px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 20px;
   padding-right: 20px;
+  position: relative;
 }
 
 .footer-bottom p {
   margin: 0;
   font-size: 0.9rem;
+  color: #95a5a6;
+}
+
+/* Social Media Icons (if needed) */
+.social-icons {
+  margin-top: 15px;
+}
+
+.social-icons a {
+  color: #bdc3c7;
+  margin: 0 10px;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #3498db;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-section {
+    min-width: auto;
+    margin-bottom: 25px;
+  }
+
+  .footer-section h3::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }

@@ -26,6 +26,7 @@ const ResetPassword = () => {
         <div className="reset-container">
             <div className="reset-card">
                 <Form onSubmit={(e) => { e.preventDefault(); handleReset(); }} className="reset-form">
+                    <img src="/service.png" alt="ServiceHub Logo" className="auth-logo" />
                     <h2 className="reset-title">Reset Password</h2>
                     <input
                         type="email"
