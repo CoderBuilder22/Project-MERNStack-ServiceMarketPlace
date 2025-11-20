@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { register, login , ResetPassword , updatePassword } from "../controllers/AuthController.js";
+import { register, login , ResetPassword , updatePassword , getProfile } from "../controllers/AuthController.js";
 
 const router = express.Router();
 
@@ -19,5 +19,6 @@ router.post("/register", upload.single('photo'), register);
 router.post("/login", login);
 router.post("/reset-password", ResetPassword);
 router.put("/update-password/:userId", updatePassword);
+router.get("/profile/:userId", getProfile)
 
 export default router;

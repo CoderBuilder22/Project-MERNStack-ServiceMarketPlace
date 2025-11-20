@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ServiceProviderDashboard.css";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const ServiceProviderDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [providerCategory, setProviderCategory] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser && storedUser !== "undefined") {
@@ -17,27 +21,39 @@ const ServiceProviderDashboard = () => {
     }
     return null;
   });
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     categoryId: "",
   });
+
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [fileName, setFileName] = useState('');
   const [editingService, setEditingService] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!userInfo) return;
       try {
-        const [servicesRes, categoriesRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/provider/services/provider/${userInfo._id}`),
-          axios.get("http://localhost:5000/api/admin/categories"),
-        ]);
+        const [servicesRes, categoriesRes, profileRes, bookingsRes] =
+          await Promise.all([
+            axios.get(
+              `http://localhost:5000/api/provider/services/provider/${userInfo._id}`
+            ),
+            axios.get("http://localhost:5000/api/admin/categories"),
+            axios.get(`http://localhost:5000/api/auth/profile/${userInfo._id}`),
+            axios
+              .get(
+                `http://localhost:5000/api/provider/bookings/provider/${userInfo._id}`
+              )
+              .catch(() => ({ data: [] })),
+          ]);
         setServices(servicesRes.data);
         setCategories(categoriesRes.data);
+        setProviderCategory(profileRes.data.category);
+        setBookings(bookingsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -45,23 +61,37 @@ const ServiceProviderDashboard = () => {
     fetchData();
   }, [userInfo]);
 
+  // Fix: Improved form data handling
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleCreateService = async (e) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('price', formData.price);
-      formDataToSend.append('categoryId', formData.categoryId);
-      formDataToSend.append('providerId', userInfo._id);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("price", formData.price);
+      formDataToSend.append("categoryId", formData.categoryId);
+      formDataToSend.append("providerId", userInfo._id);
+
       if (photo) {
-        formDataToSend.append('photo', photo);
+        formDataToSend.append("photo", photo);
       }
-      const response = await axios.post("http://localhost:5000/api/provider/service", formDataToSend);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/provider/service",
+        formDataToSend
+      );
       setServices([...services, response.data]);
-      setFormData({ title: "", description: "", price: "", categoryId: "" });
-      setPhoto(null);
-      setPhotoPreview(null);
+
+      // Fix: Reset form properly
+      resetForm();
       setActiveTab("manageServices");
     } catch (error) {
       console.error("Error creating service:", error);
@@ -72,22 +102,29 @@ const ServiceProviderDashboard = () => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('price', formData.price);
-      formDataToSend.append('categoryId', formData.categoryId);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("price", formData.price);
+      formDataToSend.append("categoryId", formData.categoryId);
+
       if (photo) {
-        formDataToSend.append('photo', photo);
+        formDataToSend.append("photo", photo);
       }
-      const response = await axios.put(`http://localhost:5000/api/provider/service/${editingService._id}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setServices(services.map(s => s._id === editingService._id ? response.data : s));
-      setFormData({ title: "", description: "", price: "", categoryId: "" });
-      setPhoto(null);
-      setPhotoPreview(null);
+
+      const response = await axios.put(
+        `http://localhost:5000/api/provider/service/${editingService._id}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setServices(
+        services.map((s) => (s._id === editingService._id ? response.data : s))
+      );
+      resetForm();
       setEditingService(null);
       setActiveTab("manageServices");
     } catch (error) {
@@ -97,23 +134,43 @@ const ServiceProviderDashboard = () => {
 
   const handleDeleteService = async (serviceId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/provider/service/${serviceId}`);
-      setServices(services.filter(s => s._id !== serviceId));
+      await axios.delete(
+        `http://localhost:5000/api/provider/service/${serviceId}`
+      );
+      setServices(services.filter((s) => s._id !== serviceId));
     } catch (error) {
       console.error("Error deleting service:", error);
     }
   };
 
+  // Fix: Reset form function
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      price: "",
+      categoryId: "",
+    });
+    setPhoto(null);
+    setPhotoPreview(null);
+  };
+
   const startEdit = (service) => {
     setFormData({
-      title: service.title,
-      description: service.description,
-      price: service.price,
-      categoryId: service.categoryId,
+      title: service.title || "",
+      description: service.description || "",
+      price: service.price || "",
+      categoryId: service.categoryId || "",
     });
-    setPhoto(null); // Reset photo for edit
+    setPhoto(null);
+    setPhotoPreview(null);
     setEditingService(service);
     setActiveTab("createService");
+  };
+
+  const cancelEdit = () => {
+    setEditingService(null);
+    resetForm();
   };
 
   const Overview = () => (
@@ -126,14 +183,14 @@ const ServiceProviderDashboard = () => {
       </div>
       <div className="col-md-4">
         <div className="card p-3 shadow-sm">
-          <h5>Total Earnings</h5>
-          <h3>$0</h3> {/* Placeholder, implement if backend provides */}
+          <h5>Total Bookings</h5>
+          <h3>{bookings.length}</h3>
         </div>
       </div>
       <div className="col-md-4">
         <div className="card p-3 shadow-sm">
           <h5>Jobs Completed</h5>
-          <h3>0</h3> {/* Placeholder */}
+          <h3>{bookings.filter((b) => b.status === "completed").length}</h3>
         </div>
       </div>
     </div>
@@ -142,56 +199,86 @@ const ServiceProviderDashboard = () => {
   const CreateService = () => (
     <div className="mt-4">
       <h5>{editingService ? "Edit Service" : "Create New Service"}</h5>
-      <form onSubmit={editingService ? handleUpdateService : handleCreateService}>
+      <form
+        onSubmit={editingService ? handleUpdateService : handleCreateService}
+      >
         <div className="mb-3">
-          <label>Title</label>
+          <label htmlFor="title" className="form-label">
+            Title
+          </label>
           <input
+            id="title"
+            name="title"
             type="text"
             className="form-control"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={handleInputChange}
             required
-            autoComplete="off"
+            placeholder="Enter service title"
           />
         </div>
+
         <div className="mb-3">
-          <label>Description</label>
+          <label htmlFor="description" className="form-label">
+            Description
+          </label>
           <textarea
+            id="description"
+            name="description"
             className="form-control"
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={handleInputChange}
             required
+            rows="4"
+            placeholder="Enter service description"
           />
         </div>
+
         <div className="mb-3">
-          <label>Price</label>
+          <label htmlFor="price" className="form-label">
+            Price
+          </label>
           <input
+            id="price"
+            name="price"
             type="number"
             className="form-control"
             value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            onChange={handleInputChange}
             required
-            autoComplete="off"
+            placeholder="Enter price"
+            min="0"
+            step="0.01"
           />
         </div>
+
         <div className="mb-3">
-          <label>Category</label>
+          <label htmlFor="category" className="form-label">
+            Category
+          </label>
           <select
+            id="category"
+            name="categoryId"
             className="form-control"
             value={formData.categoryId}
-            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+            onChange={handleInputChange}
             required
-            autoComplete="off"
           >
             <option value="">Select Category</option>
-            {categories.map(c => (
-              <option key={c._id} value={c._id}>{c.name}</option>
-            ))}
+            {providerCategory && (
+              <option value={providerCategory._id}>
+                {providerCategory.name}
+              </option>
+            )}
           </select>
         </div>
+
         <div className="mb-3">
-          <label>Photo</label>
+          <label htmlFor="photo" className="form-label">
+            Photo
+          </label>
           <input
+            id="photo"
             type="file"
             className="form-control"
             accept="image/*"
@@ -200,42 +287,56 @@ const ServiceProviderDashboard = () => {
               setPhoto(file);
               if (file) {
                 setPhotoPreview(URL.createObjectURL(file));
+              } else {
+                setPhotoPreview(null);
               }
-
             }}
           />
+
           {photoPreview && (
-            <div className="mt-2">
-              <small>Selected Photo:</small>
-              <br />
-              <img src={photoPreview} alt="Selected photo" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+            <div className="mt-3">
+              <small className="text-muted">Selected Photo Preview:</small>
+              <div className="mt-2">
+                <img
+                  src={photoPreview}
+                  alt="Selected preview"
+                  className="img-thumbnail"
+                  style={{ maxWidth: "200px", maxHeight: "200px" }}
+                />
+              </div>
             </div>
           )}
-          {editingService && editingService.photoURL && (
-            <div className="mt-2">
-              <small>Current Photo:</small>
-              <br />
-              <img src={`http://localhost:5000${editingService.photoURL}`} alt="Current service photo" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+
+          {editingService && editingService.photoURL && !photoPreview && (
+            <div className="mt-3">
+              <small className="text-muted">Current Photo:</small>
+              <div className="mt-2">
+                <img
+                  src={`http://localhost:5000${editingService.photoURL}`}
+                  alt="Current service"
+                  className="img-thumbnail"
+                  style={{ maxWidth: "200px", maxHeight: "200px" }}
+                />
+              </div>
             </div>
           )}
         </div>
-        <button type="submit" className="btn btn-primary">
-          {editingService ? "Update Service" : "Create Service"}
-        </button>
-        {editingService && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={() => {
-              setEditingService(null);
-              setFormData({ title: "", description: "", price: "", categoryId: "" });
-              setPhoto(null);
-              setPhotoPreview(null);
-            }}
-          >
-            Cancel
+
+        <div className="d-flex gap-2">
+          <button type="submit" className="btn btn-primary">
+            {editingService ? "Update Service" : "Create Service"}
           </button>
-        )}
+
+          {editingService && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={cancelEdit}
+            >
+              Cancel Edit
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
@@ -243,74 +344,230 @@ const ServiceProviderDashboard = () => {
   const ManageServices = () => (
     <div className="table-responsive mt-4">
       <h5>Your Services</h5>
-      <table className="table align-middle table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {services.map((s) => (
-            <tr key={s._id}>
-              <td>{s.title}</td>
-              <td>{s.description}</td>
-              <td>${s.price}</td>
-              <td>{categories.find(c => c._id === s.categoryId)?.name || "N/A"}</td>
-              <td>
-                <button className="btn btn-sm btn-warning me-2" onClick={() => startEdit(s)}>
-                  Edit
-                </button>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDeleteService(s._id)}>
-                  Delete
-                </button>
-              </td>
+      {services.length === 0 ? (
+        <div className="alert alert-info">
+          No services found. Create your first service to get started.
+        </div>
+      ) : (
+        <table className="table align-middle">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {services.map((service) => (
+              <tr key={service._id}>
+                <td>{service.title}</td>
+                <td>{service.description}</td>
+                <td>${service.price}</td>
+                <td>
+                  {categories.find((cat) => cat._id === service.categoryId)
+                    ?.name || "N/A"}
+                </td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <button
+                      className="btn btn-sm btn-warning"
+                      onClick={() => startEdit(service)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => handleDeleteService(service._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
+
+  const ManageBookings = ({ bookings }) => {
+    if (!bookings || !Array.isArray(bookings)) return null;
+
+    const bookedDates = bookings.map((b) => new Date(b.date).toDateString());
+
+    const acceptBooking = async (bookId) => {
+      await axios.put(
+        `http://localhost:5000/api/provider/booking/accept/${bookId}`
+      );
+      setBookings(
+        bookings.map((b) =>
+          b._id === bookId ? { ...b, status: "accepted" } : b
+        )
+      );
+    };
+
+    const rejectBooking = async (bookId) => {
+      await axios.put(
+        `http://localhost:5000/api/provider/booking/reject/${bookId}`
+      );
+      setBookings(
+        bookings.map((b) =>
+          b._id === bookId ? { ...b, status: "rejected" } : b
+        )
+      );
+    };
+
+    const tileClassName = ({ date, view }) => {
+      if (view === "month" && bookedDates.includes(date.toDateString())) {
+        return "booked-day";
+      }
+      return null;
+    };
+
+    return (
+      <div className="mt-4">
+        <div className="table-responsive">
+          <h5>Your Bookings</h5>
+          {bookings.length === 0 ? (
+            <div className="alert alert-info">No bookings found.</div>
+          ) : (
+            <table className="table align-middle">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Location</th>
+                  <th>email</th>
+                  <th>Service</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.map((booking) => (
+                  <tr key={booking._id}>
+                    <td>{new Date(booking.date).toLocaleDateString()}</td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          booking.status === "completed"
+                            ? "bg-success"
+                            : booking.status === "pending"
+                            ? "bg-warning"
+                            : "bg-secondary"
+                        }`}
+                      >
+                        {booking.status}
+                      </span>
+                    </td>
+                    <td>{booking.customerId?.name || "N/A"}</td>
+                    <td>{booking.customerId?.tel || "N/A"}</td>
+                    <td>{booking.customerId?.city || "N/A"}</td>
+                    <td>{booking.customerId?.email || "N/A"}</td>
+                    <td>{booking.serviceId?.title || "N/A"}</td>
+                    {booking.status === "pending" && (
+                      <>
+                        <td>
+                          <button
+                            className="btn btn-accept btn-sm me-2"
+                            onClick={() => acceptBooking(booking._id)}
+                          >
+                            <i className="bi bi-check-circle me-1"></i> Accept
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => rejectBooking(booking._id)}
+                          >
+                            <i className="bi bi-x-circle me-1"></i> Refuse
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-5">
+          <h5>Booking Calendar</h5>
+          <Calendar tileClassName={tileClassName} />
+        </div>
+
+        <style>{`
+        .booked-day {
+          background-color: #7e0e0eff !important;
+          color: white !important;
+          border-radius: 50%;
+        }
+      `}</style>
+      </div>
+    );
+  };
 
   return (
     <div className="provider-dashboard">
       <div className="container my-4">
         <h2>Service Provider Dashboard</h2>
-        <p>Manage your services</p>
+        <p>Manage your services and grow your business</p>
 
-      <ul className="nav nav-tabs">
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "overview" ? "active" : ""}`}
-            onClick={() => setActiveTab("overview")}
-          >
-            Overview
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "createService" ? "active" : ""}`}
-            onClick={() => setActiveTab("createService")}
-          >
-            Create Service
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "manageServices" ? "active" : ""}`}
-            onClick={() => setActiveTab("manageServices")}
-          >
-            Manage Services
-          </button>
-        </li>
-      </ul>
+        <ul className="nav nav-tabs">
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "overview" ? "active" : ""}`}
+              onClick={() => setActiveTab("overview")}
+            >
+              Overview
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${
+                activeTab === "createService" ? "active" : ""
+              }`}
+              onClick={() => {
+                setEditingService(null);
+                resetForm();
+                setActiveTab("createService");
+              }}
+            >
+              Create Service
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${
+                activeTab === "manageServices" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("manageServices")}
+            >
+              Manage Services
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${
+                activeTab === "manageBookings" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("manageBookings")}
+            >
+              Manage Bookings
+            </button>
+          </li>
+        </ul>
 
         {activeTab === "overview" && <Overview />}
         {activeTab === "createService" && <CreateService />}
         {activeTab === "manageServices" && <ManageServices />}
+        {activeTab === "manageBookings" && (
+          <ManageBookings bookings={bookings} />
+        )}
       </div>
     </div>
   );

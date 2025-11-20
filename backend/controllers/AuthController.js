@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Provider from "../models/Provider.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
@@ -6,39 +7,46 @@ dotenv.config();
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, bio, skills, city, tel } = req.body;
+    const { name, email, password, role, category, bio, skills, city, tel } = req.body;
     const photo = req.file ? req.file.path : null;
 
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-  
-    if (role !== 'customer' && role !== 'provider') {
-      return res.status(400).json({ message: "Role must be 'customer' or 'provider'" });
+    if (role !== "customer" && role !== "provider") {
+      return res
+        .status(400)
+        .json({ message: "Role must be 'customer' or 'provider'" });
     }
 
     if (!tel || !/^\d{8}$/.test(tel)) {
-      return res.status(400).json({ message: "Phone must be exactly 8 digits" });
+      return res
+        .status(400)
+        .json({ message: "Phone must be exactly 8 digits" });
     }
 
-    
-    if (typeof name !== 'string' || name.trim() === '') {
-      return res.status(400).json({ message: "Name must be a non-empty string" });
+    if (typeof name !== "string" || name.trim() === "") {
+      return res
+        .status(400)
+        .json({ message: "Name must be a non-empty string" });
     }
 
-    
-    if (typeof city !== 'string' || city.trim() === '') {
-      return res.status(400).json({ message: "City must be a non-empty string" });
+    if (typeof city !== "string" || city.trim() === "") {
+      return res
+        .status(400)
+        .json({ message: "City must be a non-empty string" });
     }
 
-    if(password.trim()===''){
-      return res.status(400).json({ message: "Password cannot be empty or whitespace" });
+    if (password.trim() === "") {
+      return res
+        .status(400)
+        .json({ message: "Password cannot be empty or whitespace" });
     }
 
-    const existingUser = await User.findOne({ email }) || await User.findOne({ tel });
+    const existingUser =
+      (await User.findOne({ email })) || (await User.findOne({ tel }));
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -50,6 +58,7 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      category,
       bio,
       skills,
       photo,
@@ -57,6 +66,13 @@ export const register = async (req, res) => {
       tel,
     });
     await user.save();
+
+    if (role === "provider") {
+      const provider = new Provider({
+        userId: user._id,
+      });
+      await provider.save();
+    }
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -77,8 +93,7 @@ export const login = async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid email or password" });
       }
-    }
-    else if (user.role === "admin") {
+    } else if (user.role === "admin") {
       if (password !== user.password) {
         return res.status(400).json({ message: "Invalid email or password" });
       }
@@ -147,5 +162,15 @@ export const updatePassword = async (req, res) => {
   }
 };
 
+export const getProfile = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId).select("-password").populate("category");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
-export default { register, login, ResetPassword, updatePassword };
+export default { register, login, ResetPassword, updatePassword, getProfile };

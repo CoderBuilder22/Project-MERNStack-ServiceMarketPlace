@@ -9,6 +9,7 @@ import {
 import Register from "./pages/Auth/Register.jsx";
 import Login from "./pages/Auth/Login.jsx";
 import Home from "./pages/Home.jsx";
+import Profile from "./pages/Profile.jsx"
 import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 import UpdatePassword from "./pages/Auth/UpdatePassword.jsx";
 
@@ -45,6 +46,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/Profile" element={<Profile />} />
         <Route path="/service" element={<Service />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

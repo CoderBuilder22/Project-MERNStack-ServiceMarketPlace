@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: { type: String, enum: ["customer", "provider", "admin"], default: "customer" },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   bio: String,
   skills: String,
   photo: String,

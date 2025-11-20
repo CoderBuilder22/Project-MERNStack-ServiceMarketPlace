@@ -96,6 +96,11 @@ const NavBar = ({ setEnableTransition }) => {
                 </li>
               )}
               <li className="nav-item">
+                <Link className="nav-link" to="/profile" onClick={() => setEnableTransition(true)}>
+                  Profile
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to={getDashboardLink()} onClick={() => setEnableTransition(true)}>
                   Dashboard
                 </Link>

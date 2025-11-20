@@ -12,6 +12,7 @@ export const Service = () => {
   const [error, setError] = useState(null);
   const [failedImages, setFailedImages] = useState(new Set());
   const [searchParams] = useSearchParams();
+  const [booked, setBooked] = useState({});
   const userInfo = JSON.parse(localStorage.getItem("userInfo")) || null;
 
   const bookService = async (serviceId) => {
@@ -23,7 +24,9 @@ export const Service = () => {
           customerId: userInfo._id,
         }
       );
+      setBooked((prev) => ({ ...prev, [serviceId]: true }));
       console.log(`Booking service with ID: ${serviceId}`);
+      alert("Service booked successfully!, Check Your Bookings")
     } catch (error) {
       console.error("Error booking service:", error);
     }
@@ -182,12 +185,18 @@ export const Service = () => {
                 {service.description?.length > 100 ? "..." : ""}
               </p>
               <div className="service-price">${service.price || "0"}</div>
-              <button
-                className="book-button"
-                onClick={() => bookService(service._id)}
-              >
-                Book Now
-              </button>
+              {!booked[service._id] ? (
+                <button
+                  className="book-button"
+                  onClick={() => bookService(service._id)}
+                >
+                  Book Now
+                </button>
+              ) : (
+                <button className="book-button" disabled>
+                  Booked
+                </button>
+              )}
             </div>
           </div>
         ))}
