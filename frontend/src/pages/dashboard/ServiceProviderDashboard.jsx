@@ -22,6 +22,8 @@ const ServiceProviderDashboard = () => {
     return null;
   });
 
+  const [profileData, setProfileData] = React.useState(null);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -59,6 +61,21 @@ const ServiceProviderDashboard = () => {
       }
     };
     fetchData();
+  }, [userInfo]);
+
+  React.useEffect(() => {
+    const fetchProfileData = async () => {
+      if (!userInfo || !userInfo._id) return;
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/auth/profile/${userInfo._id}`
+        );
+        setProfileData(response.data);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+    fetchProfileData();
   }, [userInfo]);
 
   // Fix: Improved form data handling
@@ -143,7 +160,7 @@ const ServiceProviderDashboard = () => {
     }
   };
 
-  // Fix: Reset form function
+ 
   const resetForm = () => {
     setFormData({
       title: "",
@@ -175,22 +192,34 @@ const ServiceProviderDashboard = () => {
 
   const Overview = () => (
     <div className="row g-4 mt-3">
-      <div className="col-md-4">
+      <div className="col-md-2">
         <div className="card p-3 shadow-sm">
           <h5>Total Services</h5>
           <h3>{services.length}</h3>
         </div>
       </div>
-      <div className="col-md-4">
+      <div className="col-md-2">
         <div className="card p-3 shadow-sm">
           <h5>Total Bookings</h5>
           <h3>{bookings.length}</h3>
         </div>
       </div>
-      <div className="col-md-4">
+      <div className="col-md-2">
         <div className="card p-3 shadow-sm">
           <h5>Jobs Completed</h5>
           <h3>{bookings.filter((b) => b.status === "completed").length}</h3>
+        </div>
+      </div>
+      <div className="col-md-3">
+        <div className="card p-3 shadow-sm">
+          <h5>Total Earnings</h5>
+          <h3>${profileData?.totalEarnings?.toFixed(2) || "0.00"}</h3>
+        </div>
+      </div>
+      <div className="col-md-3">
+        <div className="card p-3 shadow-sm">
+          <h5>Rating</h5>
+          <h3>{profileData?.Rating?.toFixed(2) || "0.00"}</h3>
         </div>
       </div>
     </div>

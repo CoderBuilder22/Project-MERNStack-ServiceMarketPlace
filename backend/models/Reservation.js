@@ -11,4 +11,4 @@ const reservationSchema = new mongoose.Schema({
 
 export default mongoose.model("Reservation", reservationSchema);
 
-// add a phone number , location of user 
+
