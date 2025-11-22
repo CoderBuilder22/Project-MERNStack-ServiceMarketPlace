@@ -2,6 +2,8 @@ import Service from "../models/Service.js";
 import User from "../models/User.js";
 import Provider from "../models/Provider.js";
 import Reservation from "../models/Reservation.js";
+import Review from "../models/Review.js";
+
 
 export const createService = async (req, res) => {
   try {
@@ -151,7 +153,42 @@ export const CompleteBooking = async (req, res) =>{
   }
 }
 
-// viewEarnings()
+
+export const calculateAndUpdateProviderRating = async (providerId) => {
+  try {
+    const reviews = await Review.find({ providerId });
+
+    const mostRecentReviewsMap = new Map();
+
+    reviews.forEach((review) => {
+      const serviceIdStr = review.serviceId.toString();
+      if (
+        !mostRecentReviewsMap.has(serviceIdStr) ||
+        mostRecentReviewsMap.get(serviceIdStr).createdAt < review.createdAt
+      ) {
+        mostRecentReviewsMap.set(serviceIdStr, review);
+      }
+    });
+
+    const mostRecentReviews = Array.from(mostRecentReviewsMap.values());
+
+    
+    const totalRating = mostRecentReviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = mostRecentReviews.length > 0 ? totalRating / mostRecentReviews.length : 0;
+
+    
+    const provider = await User.findById(providerId);
+    if (provider) {
+      provider.Rating = averageRating;
+      await provider.save();
+    }
+
+    return averageRating;
+  } catch (error) {
+    console.error("Error calculating/updating provider rating:", error);
+    throw error;
+  }
+};
 
 // updateProfile()
 
@@ -163,4 +200,5 @@ export default {
   getBookingsByProvider,
   acceptBooking,
   rejectBooking,
+  calculateAndUpdateProviderRating,
 };

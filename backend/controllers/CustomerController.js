@@ -3,6 +3,7 @@ import Review from "../models/Review.js";
 import Service from "../models/Service.js";
 import User from "../models/User.js";
 import Provider from "../models/Provider.js";
+import { calculateAndUpdateProviderRating } from "./ProviderController.js";
 
 export const bookService = async (req, res) => {
   const { serviceId, customerId } = req.body;
@@ -99,6 +100,9 @@ export const addReview = async (req, res) => {
       existingReview.rating = rating;
       existingReview.comment = comment;
       await existingReview.save();
+
+      await calculateAndUpdateProviderRating(reservation.providerId);
+
       return res.status(200).json({ message: "Review updated successfully", review: existingReview });
     }
 
@@ -113,22 +117,7 @@ export const addReview = async (req, res) => {
 
     await newReview.save();
 
-    const provider = await Provider.findById(reservation.providerId);
-
-    if (provider) {
-      const reviews = await Review.find({ providerId: provider._id });
-      const averageRating =
-        reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-
-      provider.averageRating = averageRating;
-      await provider.save();
-
-      const providerUser = await User.findById(provider.userId);
-      if (providerUser) {
-        providerUser.Rating = averageRating;
-        await providerUser.save();
-      }
-    }
+    await calculateAndUpdateProviderRating(reservation.providerId);
 
     res.status(201).json({ message: "Review added successfully", review: newReview });
   } catch (error) {
