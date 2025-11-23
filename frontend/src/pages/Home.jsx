@@ -84,12 +84,11 @@ const Home = () => {
         setTotalServices(servicesData.length);
         setTotalCategories(categoriesData.length);
         setTotalUsers(usersRes.data.length);
-        
-        // Get first 3 categories
+      
         const limitedCategories = categoriesData.slice(0, 3);
         setCategories(limitedCategories);
         
-        // Map category images using the same image logic
+      
         const imagesMap = {};
         limitedCategories.forEach(category => {
           const serviceWithImage = servicesData.find(
@@ -119,50 +118,68 @@ const Home = () => {
   return (
     <div className="home-page">
       {/* Hero Section */}
-      <section className="hero d-flex align-items-center text-center text-white py-5">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <h1 className="display-4 fw-bold mb-3">
-                Find Trusted Experts for Any Job on <span>ServiceHub</span>
-              </h1>
-              <p className="lead mb-4">
-                Hire skilled professionals or offer your services — all in one
-                secure platform.
-              </p>
-              <div className="search-info mb-4">
-                <button
-                  className="btn btn-primary btn-lg me-3"
-                  onClick={() =>
-                    navigate(isLoggedIn ? "/service" : "/register")
-                  }
-                >
-                  {isLoggedIn ? "Explore Services" : "Get Started"}
-                </button>
+      <section className="hero d-flex align-items-center text-white position-relative overflow-hidden">
+        <div className="container position-relative z-2">
+          <div className="row align-items-center min-vh-80 py-5">
+            <div className="col-lg-6 col-md-12 mb-5 mb-lg-0">
+              <div className="hero-content">
+                <h1 className="display-3 fw-bold mb-4 hero-title">
+                  Find Trusted Experts for Any Job on <span className="text-primary">ServiceHub</span>
+                </h1>
+                <p className="lead mb-4 fs-5 hero-subtitle">
+                  Hire skilled professionals or offer your services — all in one
+                  secure platform. Connect with verified experts and get your tasks done efficiently.
+                </p>
+                <div className="hero-actions d-flex flex-wrap gap-3">
+                  <button
+                    className="btn btn-primary btn-lg px-4 py-3 fw-semibold rounded-pill shadow-lg"
+                    onClick={() => navigate(isLoggedIn ? "/service" : "/register")}
+                  >
+                    {isLoggedIn ? "Explore Services" : "Get Started Free"}
+                    <span className="ms-2">→</span>
+                  </button>
+                </div>
+                <div className="hero-stats d-flex flex-wrap gap-4 mt-5 pt-3">
+                  <div className="stat-item">
+                    <h4 className="fw-bold mb-1">{totalUsers}+</h4>
+                    <small className="text-light opacity-75">Happy Users</small>
+                  </div>
+                  <div className="stat-item">
+                    <h4 className="fw-bold mb-1">{totalServices}+</h4>
+                    <small className="text-light opacity-75">Services</small>
+                  </div>
+                  <div className="stat-item">
+                    <h4 className="fw-bold mb-1">{totalCategories}+</h4>
+                    <small className="text-light opacity-75">Categories</small>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="image-grid">
-                <img
-                  src="/images/homeImage1.jpg"
-                  alt="Home 1"
-                  className="img-fluid rounded grid-image"
-                />
-                <img
-                  src="/images/homeImage2.jpg"
-                  alt="Home 2"
-                  className="img-fluid rounded grid-image"
-                />
-                <img
-                  src="/images/homeImage3.jpg"
-                  alt="Home 3"
-                  className="img-fluid rounded grid-image"
-                />
-                <img
-                  src="/images/homeImage4.jpg"
-                  alt="Home 4"
-                  className="img-fluid rounded grid-image"
-                />
+            <div className="col-lg-6 col-md-12">
+              <div className="hero-visual position-relative">
+                <div className="image-grid">
+                  <div className="grid-item main-item">
+                    <img
+                      src="/images/homeImage1.jpg"
+                      alt="Professional Service"
+                      className="img-fluid rounded-4 shadow-lg"
+                    />
+                  </div>
+                  <div className="grid-item side-item top">
+                    <img
+                      src="/images/homeImage2.jpg"
+                      alt="Home Services"
+                      className="img-fluid rounded-3 shadow"
+                    />
+                  </div>
+                  <div className="grid-item side-item bottom">
+                    <img
+                      src="/images/homeImage3.jpg"
+                      alt="Quality Work"
+                      className="img-fluid rounded-3 shadow"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -170,48 +187,59 @@ const Home = () => {
       </section>
 
       {/* Why Choose ServiceHub Section */}
-      <section className="why-choose-section py-5">
-        <div className="container text-center">
-          <h2 className="section-title fw-bold mb-5">Why Choose ServiceHub?</h2>
+      <section className="why-choose-section py-5 position-relative">
+        <div className="container position-relative z-2">
+          <div className="text-center mb-5">
+            <h2 className="section-title fw-bold display-5 mb-3">Why Choose ServiceHub?</h2>
+            <p className="section-subtitle lead text-light opacity-75 mx-auto" style={{maxWidth: '600px'}}>
+              We provide the best platform to connect customers with trusted service providers
+            </p>
+          </div>
           <div className="row g-4">
-            <div className="col-md-4">
-              <div className="feature-card card border-0 shadow-sm h-100">
-                <div className="card-body p-4">
-                  <div className="feature-icon mb-3">
-                    <i className="bi bi-shield-check"></i>
+            <div className="col-xl-4 col-md-6">
+              <div className="feature-card card border-0 shadow-lg h-100 hover-lift">
+                <div className="card-body text-center p-4 p-xl-5">
+                  <div className="feature-icon-wrapper mb-4">
+                    <div className="feature-icon bg-primary bg-opacity-10 rounded-3">
+                      <span className="fs-1">🛡️</span>
+                    </div>
                   </div>
-                  <h5 className="feature-title fw-bold">Verified Professionals</h5>
-                  <p className="feature-description">
-                    Every provider is verified to ensure safety and trust in every
-                    service booked.
+                  <h5 className="feature-title fw-bold fs-4 mb-3">Verified Professionals</h5>
+                  <p className="feature-description text-muted fs-6 lh-lg mb-0">
+                    Every service provider is thoroughly verified to ensure safety, reliability, 
+                    and trust in every service booked through our platform.
                   </p>
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
-              <div className="feature-card card border-0 shadow-sm h-100">
-                <div className="card-body p-4">
-                  <div className="feature-icon mb-3">
-                    <i className="bi bi-lightning-charge"></i>
+            <div className="col-xl-4 col-md-6">
+              <div className="feature-card card border-0 shadow-lg h-100 hover-lift">
+                <div className="card-body text-center p-4 p-xl-5">
+                  <div className="feature-icon-wrapper mb-4">
+                    <div className="feature-icon bg-success bg-opacity-10 rounded-3">
+                      <span className="fs-1">⚡</span>
+                    </div>
                   </div>
-                  <h5 className="feature-title fw-bold">Fast & Easy Booking</h5>
-                  <p className="feature-description">
-                    Book a service in minutes using our simple and intuitive
-                    platform.
+                  <h5 className="feature-title fw-bold fs-4 mb-3">Fast & Easy Booking</h5>
+                  <p className="feature-description text-muted fs-6 lh-lg mb-0">
+                    Book services in minutes with our intuitive platform. Simple search, 
+                    instant booking, and quick confirmation make scheduling effortless.
                   </p>
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
-              <div className="feature-card card border-0 shadow-sm h-100">
-                <div className="card-body p-4">
-                  <div className="feature-icon mb-3">
-                    <i className="bi bi-lock"></i>
+            <div className="col-xl-4 col-md-6">
+              <div className="feature-card card border-0 shadow-lg h-100 hover-lift">
+                <div className="card-body text-center p-4 p-xl-5">
+                  <div className="feature-icon-wrapper mb-4">
+                    <div className="feature-icon bg-warning bg-opacity-10 rounded-3">
+                      <span className="fs-1">🔒</span>
+                    </div>
                   </div>
-                  <h5 className="feature-title fw-bold">Secure Payments</h5>
-                  <p className="feature-description">
-                    Pay confidently through our encrypted and reliable payment
-                    system.
+                  <h5 className="feature-title fw-bold fs-4 mb-3">Secure Payments</h5>
+                  <p className="feature-description text-muted fs-6 lh-lg mb-0">
+                    Pay with confidence through our encrypted payment system. Your financial 
+                    information is protected with bank-level security measures.
                   </p>
                 </div>
               </div>
@@ -221,42 +249,59 @@ const Home = () => {
       </section>
 
       {/* Featured Services Section */}
-      <section className="featured-services-section py-5">
-        <div className="container">
-          <h2 className="section-title text-center fw-bold mb-5">Featured Services</h2>
+      <section className="featured-services-section py-5 position-relative">
+        <div className="container position-relative z-2">
+          <div className="text-center mb-5">
+            <h2 className="section-title fw-bold display-5 mb-3">Featured Services</h2>
+            <p className="section-subtitle lead text-light opacity-75 mx-auto" style={{maxWidth: '600px'}}>
+              Discover our most popular and highly-rated services
+            </p>
+          </div>
           {loading ? (
-            <div className="text-center">
-              <p className="text-white">Loading featured services...</p>
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary mb-3" style={{width: '3rem', height: '3rem'}}></div>
+              <p className="text-light fs-5">Loading featured services...</p>
             </div>
           ) : featuredServices.length > 0 ? (
             <div className="row g-4">
               {featuredServices.map((service) => (
-                <div key={service._id} className="col-lg-4 col-md-6">
-                  <div className="service-card card border-0 shadow-sm h-100">
-                    <div className="service-image-container">
+                <div key={service._id} className="col-xl-4 col-lg-6">
+                  <div className="service-card card border-0 shadow-lg h-100 hover-lift">
+                    <div className="service-image-container position-relative overflow-hidden">
                       <img
                         src={getImageSrc(service)}
                         alt={service.title || "Service"}
                         onError={() => handleImageError(service._id)}
                         loading="lazy"
-                        onLoad={(e) => {
-                          e.target.style.opacity = "1";
-                        }}
-                        style={{ opacity: 0, transition: "opacity 0.3s ease" }}
                         className="service-image card-img-top"
+                        style={{ height: '250px', objectFit: 'cover' }}
                       />
+                      <div className="service-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <button 
+                          className="btn btn-primary rounded-pill px-4"
+                          onClick={() => navigate(isLoggedIn ? "/service" : "/login")}
+                        >
+                          View Details
+                        </button>
+                      </div>
                     </div>
-                    <div className="card-body p-4">
-                      <h5 className="service-title card-title fw-bold">{service.title}</h5>
-                      <p className="service-description card-text">
+                    <div className="card-body p-4 text-white">
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <h5 className="service-title card-title fw-bold fs-5 mb-0 flex-grow-1 me-3">{service.title}</h5>
+                        <span className="service-price">${service.price || "N/A"}</span>
+                      </div>
+                      <p className="service-description card-text lh-base mb-4">
                         {service.description && service.description.length > 120 
                           ? `${service.description.substring(0, 120)}...` 
                           : service.description || "No description available."}
                       </p>
-                      <div className="service-meta d-flex justify-content-between align-items-center">
-                        <span className="service-price fw-bold text-primary">
-                          ${service.price || "N/A"}
-                        </span>
+                      <div className="service-meta d-flex justify-content-end align-items-center">
+                        <button 
+                          className="btn btn-outline-light btn-sm rounded-pill"
+                          onClick={() => navigate(isLoggedIn ? "/service" : "/login")}
+                        >
+                          Book Now
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -264,69 +309,66 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center">
-              <p className="text-white">No featured services available.</p>
+            <div className="text-center py-5">
+              <div className="empty-state-icon mb-4">
+                <span className="fs-1">📦</span>
+              </div>
+              <h4 className="text-light mb-3">No Featured Services Available</h4>
+              <p className="text-light opacity-75 mb-4">Check back later for new services</p>
+              <button 
+                className="btn btn-primary rounded-pill px-4"
+                onClick={() => navigate("/service")}
+              >
+                Browse All Services
+              </button>
             </div>
           )}
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section className="stats-section py-5">
-        <div className="container text-center">
-          <h2 className="section-title fw-bold mb-5">ServiceHub in Numbers</h2>
-          <div className="row g-4">
-            {/* Card 1 - Total Users */}
-            <div className="col-md-4">
-              <div className="stat-card">
-                <div className="stat-icon mb-3">
-                  <svg
-                    width="50"
-                    height="50"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
+      <section className="stats-section py-5 position-relative">
+        <div className="container position-relative z-2">
+          <div className="text-center mb-5">
+            <h2 className="section-title fw-bold display-5 mb-3">ServiceHub in Numbers</h2>
+            <p className="section-subtitle lead text-light opacity-75 mx-auto" style={{maxWidth: '600px'}}>
+              Join thousands of satisfied users and service providers
+            </p>
+          </div>
+          <div className="row g-4 justify-content-center">
+            <div className="col-xl-3 col-md-4 col-sm-6">
+              <div className="stat-card text-center p-4 p-xl-5 hover-scale">
+                <div className="stat-icon-wrapper mb-4">
+                  <div className="stat-icon bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center">
+                    <span className="fs-1">👥</span>
+                  </div>
                 </div>
-                <h3 className="display-5 fw-bold">{totalUsers}</h3>
-                <p className="mb-0">Total Users</p>
+                <h3 className="display-4 fw-bold text-white mb-2">{totalUsers}</h3>
+                <p className="stat-label text-light opacity-75 fs-5 mb-0">Total Users</p>
               </div>
             </div>
 
-            {/* Card 2 - Services Offered */}
-            <div className="col-md-4">
-              <div className="stat-card">
-                <div className="stat-icon mb-3">
-                  <svg
-                    width="50"
-                    height="50"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                  </svg>
+            <div className="col-xl-3 col-md-4 col-sm-6">
+              <div className="stat-card text-center p-4 p-xl-5 hover-scale">
+                <div className="stat-icon-wrapper mb-4">
+                  <div className="stat-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center">
+                    <span className="fs-1">💼</span>
+                  </div>
                 </div>
-                <h3 className="display-5 fw-bold">{totalServices}</h3>
-                <p className="mb-0">Services Offered</p>
+                <h3 className="display-4 fw-bold text-white mb-2">{totalServices}</h3>
+                <p className="stat-label text-light opacity-75 fs-5 mb-0">Services Offered</p>
               </div>
             </div>
 
-            {/* Card 3 - Categories */}
-            <div className="col-md-4">
-              <div className="stat-card">
-                <div className="stat-icon mb-3">
-                  <svg
-                    width="50"
-                    height="50"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
-                  </svg>
+            <div className="col-xl-3 col-md-4 col-sm-6">
+              <div className="stat-card text-center p-4 p-xl-5 hover-scale">
+                <div className="stat-icon-wrapper mb-4">
+                  <div className="stat-icon bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center">
+                    <span className="fs-1">📁</span>
+                  </div>
                 </div>
-                <h3 className="display-5 fw-bold">{totalCategories}</h3>
-                <p className="mb-0">Categories</p>
+                <h3 className="display-4 fw-bold text-white mb-2">{totalCategories}</h3>
+                <p className="stat-label text-light opacity-75 fs-5 mb-0">Categories</p>
               </div>
             </div>
           </div>
@@ -334,45 +376,62 @@ const Home = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="categories-section py-5">
-        <div className="container text-center">
-          <h2 className="section-title fw-bold mb-4">Browse Categories</h2>
+      <section className="categories-section py-5 position-relative">
+        <div className="container position-relative z-2">
+          <div className="text-center mb-5">
+            <h2 className="section-title fw-bold display-5 mb-3">Browse Categories</h2>
+            <p className="section-subtitle lead text-light opacity-75 mx-auto" style={{maxWidth: '600px'}}>
+              Explore services by category and find exactly what you need
+            </p>
+          </div>
           {loading ? (
-            <p className="text-white">Loading categories...</p>
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary mb-3" style={{width: '3rem', height: '3rem'}}></div>
+              <p className="text-light fs-5">Loading categories...</p>
+            </div>
           ) : categories.length > 0 ? (
-            <>
-              <div className="row g-4 justify-content-center mb-4">
-                {categories.map((category) => (
-                  <div key={category._id} className="col-lg-4 col-md-6">
-                    <div 
-                      className="category-card card border-0 shadow-sm h-100"
-                      onClick={() => navigate(`/service?category=${category._id}`)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <div className="category-image-container">
-                        <img
-                          src={getCategoryImageSrc(category._id)}
-                          alt={category.name}
-                          className="category-image card-img-top"
-                          onLoad={(e) => {
-                            e.target.style.opacity = "1";
-                          }}
-                          style={{ opacity: 0, transition: "opacity 0.3s ease" }}
-                        />
-                      </div>
-                      <div className="card-body">
-                        <h5 className="category-name card-title fw-bold">{category.name}</h5>
-                        <button className="btn btn-outline-primary btn-sm">
-                          Explore Services
-                        </button>
+            <div className="row g-4 justify-content-center">
+              {categories.map((category) => (
+                <div key={category._id} className="col-lg-4 col-md-6">
+                  <div 
+                    className="category-card card border-0 shadow-lg h-100 hover-lift position-relative overflow-hidden"
+                    onClick={() => navigate(`/service?category=${category._id}`)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="category-image-container position-relative">
+                      <img
+                        src="/images/homeImage2.jpg"
+                        alt={category.name}
+                        className="category-image card-img-top"
+                        style={{ height: '200px', objectFit: 'cover' }}
+                      />
+                      <div className="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <span className="btn btn-light rounded-pill px-4">
+                          Explore →
+                        </span>
                       </div>
                     </div>
+                    <div className="card-body text-center p-4">
+                      <h5 className="category-name card-title fw-bold fs-4 mb-3">{category.name}</h5>
+                      <p className="category-description text-muted mb-4">
+                        Discover top-rated {category.name.toLowerCase()} services from verified professionals
+                      </p>
+                      <button className="btn btn-outline-primary rounded-pill px-4">
+                        View Services →
+                      </button>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           ) : (
-            <p className="text-white">No categories available.</p>
+            <div className="text-center py-5">
+              <div className="empty-state-icon mb-4">
+                <span className="fs-1">📂</span>
+              </div>
+              <h4 className="text-light mb-3">No Categories Available</h4>
+              <p className="text-light opacity-75">Categories will be available soon</p>
+            </div>
           )}
         </div>
       </section>

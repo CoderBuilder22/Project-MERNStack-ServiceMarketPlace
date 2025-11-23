@@ -138,18 +138,18 @@
   margin-bottom: 20px; 
 }
 
-.provider-dashboard .table-responsive .d-flex {
+.provider-dashboard .table-filter-box {
   background: rgba(30,58,95,0.25);
-  padding: 5px; 
+  padding: 5px;
   border-radius: 12px;
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(74,107,255,0.2);
   box-shadow: 0 8px 25px rgba(30,58,95,0.2);
 }
 
-.provider-dashboard .table-responsive .d-flex .form-control {
-  margin-right: 10px; 
+.provider-dashboard .table-filter-box .form-control {
+  margin-right: 10px;
 }
 
 .provider-dashboard .table {
@@ -194,6 +194,7 @@
   border-radius: 25px;
   font-weight: 600;
   padding: 10px 24px;
+  margin-right: 10px;
   transition: all 0.3s ease;
   border: none;
   position: relative;
@@ -250,11 +251,9 @@
   background: rgba(30,58,95,0.15);
   color: #fff;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  white-space: nowrap;
   width: 100%;
-  /* Ensure inputs can accept multiple words */
-  white-space: normal;
-  word-wrap: break-word;
   resize: vertical; /* For textareas */
 }
 
@@ -263,9 +262,7 @@
   box-shadow: 0 0 0 0.3rem rgba(74,107,255,0.2);
   background: rgba(30,58,95,0.2);
   color: #fff;
-  transform: translateY(-2px);
-  /* Ensure focus state doesn't break text input */
-  outline: none;
+
 }
 
 /* Placeholder color */
@@ -415,3 +412,5 @@
 .provider-dashboard .nav-item {
   margin-right: 10px;
 }
+
+

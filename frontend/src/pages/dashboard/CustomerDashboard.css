@@ -409,6 +409,105 @@
   transform: translateY(-2px);
 }
 
+/* message css */
+
+.message-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.message-notification.success {
+  border-left: 4px solid #10b981;
+}
+
+.message-notification.error {
+  border-left: 4px solid #ef4444;
+}
+
+.message-notification.confirmation {
+  border-left: 4px solid #f59e0b;
+}
+
+.message-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.message-text {
+  flex: 1;
+  margin-right: 12px;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.message-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.message-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.message-progress {
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  animation: progress 6s linear forwards;
+}
+
+.message-notification.error .message-progress {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.message-notification.confirmation .message-progress {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+
 /* Ensure all buttons are properly styled */
 .booking-actions button {
   cursor: pointer;

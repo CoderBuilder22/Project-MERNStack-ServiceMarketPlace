@@ -58,8 +58,7 @@ export const getMyBookings = async (req, res) => {
         populate: {
           path: "providerId",
           populate: {
-            path: "userId",
-            model: "User",
+            path: "userId",       
             select: "name email photo city tel"
           }
         }
@@ -70,6 +69,8 @@ export const getMyBookings = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+
 
 
 export const addReview = async (req, res) => {

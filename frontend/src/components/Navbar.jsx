@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
 const NavBar = ({ setEnableTransition }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser && storedUser !== "undefined") {
@@ -50,72 +51,100 @@ const NavBar = ({ setEnableTransition }) => {
 
   const isLoggedIn = !!userInfo;
 
-  console.log("User Info:", userInfo);
-  console.log("Dashboard link:", getDashboardLink());
+  const isActiveLink = (path) => {
+    return location.pathname === path ? "active" : "";
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link className="navbar-brand" to="/">
-        ServiceHub
-      </Link>
+    <nav className="navbar navbar-expand-lg custom-navbar">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">
+          ServiceHub
+        </Link>
 
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav ms-auto">
-          {!isLoggedIn ? (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register" onClick={() => setEnableTransition(true)}>
-                  Register
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login" onClick={() => setEnableTransition(true)}>
-                  Login
-                </Link>
-              </li>
-            </>
-          ) : (
-            <>
-              {userInfo.role?.toLowerCase() === "customer" && (
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            {!isLoggedIn ? (
+              <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/service" onClick={() => setEnableTransition(true)}>
-                    Services
+                  <Link 
+                    className={`nav-link ${isActiveLink("/register")}`} 
+                    to="/register" 
+                    onClick={() => setEnableTransition(true)}
+                  >
+                    Register
                   </Link>
                 </li>
-              )}
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile" onClick={() => setEnableTransition(true)}>
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={getDashboardLink()} onClick={() => setEnableTransition(true)}>
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-danger btn-sm ms-2"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </li>
-            </>
-          )}
-        </ul>
+                <li className="nav-item">
+                  <Link 
+                    className={`nav-link ${isActiveLink("/login")}`} 
+                    to="/login" 
+                    onClick={() => setEnableTransition(true)}
+                  >
+                    Login
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                {userInfo.role?.toLowerCase() === "customer" && (
+                  <li className="nav-item">
+                    <Link 
+                      className={`nav-link ${isActiveLink("/service")}`} 
+                      to="/service" 
+                      onClick={() => setEnableTransition(true)}
+                    >
+                      Services
+                    </Link>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <Link 
+                    className={`nav-link ${isActiveLink("/profile")}`} 
+                    to="/profile" 
+                    onClick={() => setEnableTransition(true)}
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link 
+                    className={`nav-link ${isActiveLink(getDashboardLink())}`} 
+                    to={getDashboardLink()} 
+                    onClick={() => setEnableTransition(true)}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <div className="nav-user-info">
+                    <span className="user-welcome">Welcome, {userInfo.name || userInfo.email}</span>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className="btn btn-logout"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
       </div>
     </nav>
   );

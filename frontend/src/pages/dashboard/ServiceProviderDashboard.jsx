@@ -382,7 +382,7 @@ const ServiceProviderDashboard = () => {
           )}
         </div>
 
-        <div className="d-flex gap-2">
+        <div className="form-box gap-2">
           <button type="submit" className="btn btn-primary">
             {editingService ? "Update Service" : "Create Service"}
           </button>
@@ -430,7 +430,7 @@ const ServiceProviderDashboard = () => {
                     ?.name || "N/A"}
                 </td>
                 <td>
-                  <div className="d-flex gap-2">
+                  <div className=" gap-2">
                     <button
                       className="btn btn-sm btn-warning"
                       onClick={() => startEdit(service)}
@@ -455,8 +455,22 @@ const ServiceProviderDashboard = () => {
 
   const ManageBookings = ({ bookings }) => {
     if (!bookings || !Array.isArray(bookings)) return null;
-
-    const bookedDates = bookings.map((b) => new Date(b.date).toDateString());
+    const dateStatusMap = {};
+    bookings.forEach((b) => {
+      const dateStr = new Date(b.date).toDateString();
+      const statusPriority = {
+        completed: 1,
+        accepted: 2,
+        pending: 3,
+        rejected: 4,
+      };
+      if (
+        !dateStatusMap[dateStr] ||
+        statusPriority[b.status] < statusPriority[dateStatusMap[dateStr]]
+      ) {
+        dateStatusMap[dateStr] = b.status;
+      }
+    });
 
     const acceptBooking = async (bookId) => {
       await axios.put(
@@ -481,8 +495,23 @@ const ServiceProviderDashboard = () => {
     };
 
     const tileClassName = ({ date, view }) => {
-      if (view === "month" && bookedDates.includes(date.toDateString())) {
-        return "booked-day";
+      if (view === "month") {
+        const dateStr = date.toDateString();
+        const status = dateStatusMap[dateStr];
+        if (status) {
+          switch (status) {
+            case "completed":
+              return "booked-completed";
+            case "accepted":
+              return "booked-accepted";
+            case "rejected":
+              return "booked-rejected";
+            case "pending":
+              return "booked-pending";
+            default:
+              return null;
+          }
+        }
       }
       return null;
     };
@@ -515,9 +544,13 @@ const ServiceProviderDashboard = () => {
                       <span
                         className={`badge ${
                           booking.status === "completed"
+                            ? "bg-primary"
+                            : booking.status === "accepted"
                             ? "bg-success"
+                            : booking.status === "rejected"
+                            ? "bg-danger"
                             : booking.status === "pending"
-                            ? "bg-warning"
+                            ? "bg-warning text-dark"
                             : "bg-secondary"
                         }`}
                       >
@@ -561,12 +594,27 @@ const ServiceProviderDashboard = () => {
         </div>
 
         <style>{`
-        .booked-day {
-          background-color: #7e0e0eff !important;
-          color: white !important;
-          border-radius: 50%;
-        }
-      `}</style>
+          .booked-completed {
+            background-color: blue !important;
+            color: white !important;
+            border-radius: 50%;
+          }
+          .booked-accepted {
+            background-color: green !important;
+            color: white !important;
+            border-radius: 50%;
+          }
+          .booked-rejected {
+            background-color: red !important;
+            color: white !important;
+            border-radius: 50%;
+          }
+          .booked-pending {
+            background-color: yellow !important;
+            color: black !important;
+            border-radius: 50%;
+          }
+        `}</style>
       </div>
     );
   };

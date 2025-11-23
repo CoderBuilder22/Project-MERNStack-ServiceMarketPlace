@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./CustomerDashboard.css";
 import axios from "axios";
@@ -9,10 +9,21 @@ const CustomerDashboard = () => {
   const [activeReviewBookingId, setActiveReviewBookingId] = useState(null);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "", visible: false });
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const customerId = userInfo._id;
 
+  const showMessage = (text, type = "success") => {
+    setMessage({ text, type, visible: true });
+    // Auto-hide message after 5 seconds
+    setTimeout(() => {
+      setMessage(prev => ({ ...prev, visible: false }));
+    }, 5000);
+  };
 
+  const closeMessage = () => {
+    setMessage(prev => ({ ...prev, visible: false }));
+  };
 
   const cancelBooking = async (bookingId) => {
     try {
@@ -20,10 +31,10 @@ const CustomerDashboard = () => {
         `http://localhost:5000/api/customer/cancel/${bookingId}`
       );
       setBookings(bookings.filter((booking) => booking._id !== bookingId));
-      alert("Reservation cancelled successfully");
+      showMessage("Reservation cancelled successfully", "success");
     } catch (error) {
       console.error("Error cancelling booking:", error);
-      alert("Failed to cancel reservation");
+      showMessage("Failed to cancel reservation", "error");
     }
   };
 
@@ -41,9 +52,10 @@ const CustomerDashboard = () => {
       });
       setBookings(updatedBookings);
       setActiveReviewBookingId(bookingId);
+      showMessage("Booking marked as completed successfully", "success");
     } catch (error) {
       console.error("Error marking as completed:", error);
-      alert("Failed to mark reservation as completed");
+      showMessage("Failed to mark reservation as completed", "error");
     }
   };
 
@@ -56,7 +68,7 @@ const CustomerDashboard = () => {
         setBookings(response.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
-        alert("Error fetching bookings");
+        showMessage("Error fetching bookings", "error");
       } finally {
         setLoading(false);
       }
@@ -73,19 +85,23 @@ const CustomerDashboard = () => {
         comment,
         customerId,
       });
-      alert("Review submitted successfully");
+      showMessage("Review submitted successfully", "success");
       setActiveReviewBookingId(null);
       setRating("");
       setComment("");
-      await fetchReviews(); // refresh reviews after submit
+      // refresh reviews after submit
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Failed to submit review");
+      showMessage("Failed to submit review", "error");
     }
   };
 
-  const editReview = (bookingId) => {
-    setActiveReviewBookingId(bookingId);
+  const handleCancelConfirmation = (bookingId) => {
+    showMessage(
+      "Are you sure you want to cancel this booking? Click confirm to proceed.",
+      "confirmation",
+      () => cancelBooking(bookingId)
+    );
   };
 
   const formatDate = (dateString) => {
@@ -123,6 +139,19 @@ const CustomerDashboard = () => {
 
   return (
     <div className="customer-dashboard">
+      {/* Message Notification */}
+      {message.visible && (
+        <div className={`message-notification ${message.type}`}>
+          <div className="message-content">
+            <span className="message-text">{message.text}</span>
+            <button className="message-close" onClick={closeMessage}>
+              ×
+            </button>
+          </div>
+          <div className="message-progress"></div>
+        </div>
+      )}
+
       <div className="dashboard-header">
         <h1 className="dashboard-title">My Bookings</h1>
         <p className="dashboard-subtitle">Manage and track your service bookings</p>
@@ -212,6 +241,7 @@ const CustomerDashboard = () => {
                           <button
                             onClick={() => submitReview(booking._id)}
                             disabled={!rating}
+                            className="submit-review-btn"
                           >
                             Submit Review
                           </button>
@@ -221,6 +251,7 @@ const CustomerDashboard = () => {
                               setRating("");
                               setComment("");
                             }}
+                            className="cancel-review-btn"
                           >
                             Cancel
                           </button>

@@ -13,7 +13,16 @@ export const Service = () => {
   const [failedImages, setFailedImages] = useState(new Set());
   const [searchParams] = useSearchParams();
   const [booked, setBooked] = useState({});
+  const [message, setMessage] = useState({ text: "", type: "", visible: false });
   const userInfo = JSON.parse(localStorage.getItem("userInfo")) || null;
+
+  const showMessage = (text, type = "success") => {
+    setMessage({ text, type, visible: true });
+    // Auto-hide message after 5 seconds
+    setTimeout(() => {
+      setMessage(prev => ({ ...prev, visible: false }));
+    }, 5000);
+  };
 
   const bookService = async (serviceId) => {
     try {
@@ -26,10 +35,16 @@ export const Service = () => {
       );
       setBooked((prev) => ({ ...prev, [serviceId]: true }));
       console.log(`Booking service with ID: ${serviceId}`);
-      alert("Service booked successfully!, Check Your Bookings")
+      showMessage("Service booked successfully! Check Your Bookings Dashboard", "success");
     } catch (error) {
       console.error("Error booking service:", error);
+      showMessage("Failed to book service. Please try again.", "error");
     }
+  };
+
+  // Close message when user clicks the close button
+  const closeMessage = () => {
+    setMessage(prev => ({ ...prev, visible: false }));
   };
 
   useEffect(() => {
@@ -45,6 +60,7 @@ export const Service = () => {
       } catch (err) {
         console.error(err);
         setError("Failed to load services. Please try again later.");
+        showMessage("Failed to load services. Please try again later.", "error");
       } finally {
         setLoading(false);
       }
@@ -123,6 +139,19 @@ export const Service = () => {
 
   return (
     <div className="service-page">
+      {/* Message Notification */}
+      {message.visible && (
+        <div className={`message-notification ${message.type}`}>
+          <div className="message-content">
+            <span className="message-text">{message.text}</span>
+            <button className="message-close" onClick={closeMessage}>
+              ×
+            </button>
+          </div>
+          <div className="message-progress"></div>
+        </div>
+      )}
+
       <h1 className="page-title">Our Services</h1>
 
       <div className="filter-container">
@@ -162,7 +191,6 @@ export const Service = () => {
                 onError={() => handleImageError(service._id)}
                 loading="lazy"
                 onLoad={(e) => {
-                  // Add loaded class or handle load state
                   e.target.style.opacity = "1";
                 }}
                 style={{ opacity: 0, transition: "opacity 0.3s ease" }}
