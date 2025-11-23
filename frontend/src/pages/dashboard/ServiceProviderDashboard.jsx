@@ -10,6 +10,7 @@ const ServiceProviderDashboard = () => {
   const [categories, setCategories] = useState([]);
   const [providerCategory, setProviderCategory] = useState(null);
   const [bookings, setBookings] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser && storedUser !== "undefined") {
@@ -39,23 +40,33 @@ const ServiceProviderDashboard = () => {
     const fetchData = async () => {
       if (!userInfo) return;
       try {
-        const [servicesRes, categoriesRes, profileRes, bookingsRes] =
-          await Promise.all([
-            axios.get(
-              `http://localhost:5000/api/provider/services/provider/${userInfo._id}`
-            ),
-            axios.get("http://localhost:5000/api/admin/categories"),
-            axios.get(`http://localhost:5000/api/auth/profile/${userInfo._id}`),
-            axios
-              .get(
-                `http://localhost:5000/api/provider/bookings/provider/${userInfo._id}`
-              )
-              .catch(() => ({ data: [] })),
-          ]);
+        const [
+          servicesRes,
+          categoriesRes,
+          profileRes,
+          bookingsRes,
+          reviewsRes,
+        ] = await Promise.all([
+          axios.get(
+            `http://localhost:5000/api/provider/services/provider/${userInfo._id}`
+          ),
+          axios.get("http://localhost:5000/api/admin/categories"),
+          axios.get(`http://localhost:5000/api/auth/profile/${userInfo._id}`),
+          axios
+            .get(
+              `http://localhost:5000/api/provider/bookings/provider/${userInfo._id}`
+            )
+            .catch(() => ({ data: [] })),
+
+          axios.get(
+            `http://localhost:5000/api/provider/reviews/${userInfo._id}`
+          ),
+        ]);
         setServices(servicesRes.data);
         setCategories(categoriesRes.data);
         setProviderCategory(profileRes.data.category);
         setBookings(bookingsRes.data);
+        setReviews(reviewsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -160,7 +171,6 @@ const ServiceProviderDashboard = () => {
     }
   };
 
- 
   const resetForm = () => {
     setFormData({
       title: "",
@@ -220,6 +230,27 @@ const ServiceProviderDashboard = () => {
         <div className="card p-3 shadow-sm">
           <h5>Rating</h5>
           <h3>{profileData?.Rating?.toFixed(2) || "0.00"}</h3>
+        </div>
+      </div>
+      <div className="col-6 mt-3">
+        <div className="card p-3 shadow-sm">
+          <h5>Recent Reviews</h5>
+          {reviews.length === 0 ? (
+            <p>No reviews available.</p>
+          ) : (
+            <ul className="list-unstyled">
+              {reviews.map((review) => (
+                <li key={review._id} className="mb-3 border-bottom pb-2">
+                  <strong>Service:</strong> {review.serviceId?.title || "N/A"}
+                  <br />
+                  <strong>Customer:</strong> {review.customerId?.name || "N/A"}
+                  <br />
+                  <strong>Rating:</strong> {review.rating} / 5<br />
+                  <strong>Comment:</strong> {review.comment || "No comment"}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>

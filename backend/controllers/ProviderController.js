@@ -190,7 +190,30 @@ export const calculateAndUpdateProviderRating = async (providerId) => {
   }
 };
 
+
+
 // updateProfile()
+
+export const getReviewsByProvider = async (req, res) => {
+  const { providerId } = req.params;
+
+  try {
+    const reviews = await Review.find({ providerId })
+      .populate({
+        path: "customerId",
+        select: "name"   
+      })
+      .populate({
+        path: "serviceId",
+        select: "title"
+      });
+
+    res.status(200).json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
 
 export default {
   createService,
@@ -201,4 +224,5 @@ export default {
   acceptBooking,
   rejectBooking,
   calculateAndUpdateProviderRating,
+  getReviewsByProvider,
 };
