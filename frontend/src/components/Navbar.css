@@ -1,4 +1,4 @@
-/* Navbar.css - With Declared Dimensions */
+/* Navbar.css - Updated with Better Z-Index Management */
 
 .custom-navbar {
   background: linear-gradient(135deg, #1e3a5f 0%, #45315a 100%) !important;
@@ -8,6 +8,9 @@
   height: 70px;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Lower z-index to allow notifications above */
 }
 
 .custom-navbar .container-fluid {
@@ -29,6 +32,8 @@
   align-items: center;
   height: 70px;
   padding: 0 1rem;
+  z-index: 1001;
+  position: relative;
 }
 
 .navbar-brand:hover {
@@ -43,12 +48,16 @@
   align-items: center;
   gap: 0.5rem;
   height: 70px;
+  z-index: 1001;
+  position: relative;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   height: 70px;
+  position: relative;
+  z-index: 1001;
 }
 
 .nav-link {
@@ -64,6 +73,7 @@
   height: 70px;
   margin: 0;
   position: relative;
+  z-index: 1001;
 }
 
 .nav-link:hover {
@@ -86,6 +96,7 @@
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, #007bff, #6f42c1);
+  z-index: 1002;
 }
 
 /* User Info */
@@ -95,6 +106,8 @@
   padding: 0 1.25rem;
   margin-right: 0.5rem;
   height: 70px;
+  position: relative;
+  z-index: 1001;
 }
 
 .user-welcome {
@@ -117,6 +130,8 @@
   height: 70px;
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1001;
 }
 
 .btn-logout:hover {
@@ -136,6 +151,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1001;
 }
 
 .navbar-toggler:focus {
@@ -153,6 +170,7 @@
   .custom-navbar {
     height: 60px;
     padding: 0;
+    z-index: 1000;
   }
 
   .custom-navbar .container-fluid {
@@ -165,6 +183,7 @@
     height: 60px;
     padding: 0 0.75rem;
     margin-right: 0;
+    z-index: 1001;
   }
 
   .navbar-collapse {
@@ -173,7 +192,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1001; /* Higher than navbar but lower than notifications */
     padding: 0;
     margin-top: 0;
     border-radius: 0;
@@ -183,12 +202,14 @@
   .navbar-nav {
     gap: 0;
     height: auto;
+    z-index: 1002;
   }
 
   .nav-item {
     height: 55px;
     margin: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1002;
   }
 
   .nav-item:last-child {
@@ -200,6 +221,7 @@
     height: 55px;
     font-size: 16px;
     width: 100%;
+    z-index: 1002;
   }
 
   .nav-link:hover {
@@ -215,6 +237,7 @@
     right: 0;
     bottom: 0;
     height: 3px;
+    z-index: 1003;
   }
 
   .nav-user-info {
@@ -223,6 +246,7 @@
     margin: 0;
     width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1002;
   }
 
   .user-welcome {
@@ -238,6 +262,7 @@
     font-size: 16px;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1002;
   }
 
   .btn-logout:hover {
@@ -247,6 +272,7 @@
   .navbar-toggler {
     height: 40px;
     padding: 0.5rem;
+    z-index: 1001;
   }
 }
 
@@ -284,9 +310,85 @@
   outline-offset: -2px;
 }
 
-/* Sticky positioning */
-.custom-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
+/* Notification Space Management */
+/* This ensures content starts below navbar */
+.main-content {
+  margin-top: 70px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile adjustment for content spacing */
+@media (max-width: 991.98px) {
+  .main-content {
+    margin-top: 60px;
+  }
+}
+
+/* High z-index elements that should appear above navbar */
+.notification-container,
+.alert-notification,
+.toast-container,
+.modal-backdrop,
+.modal {
+  z-index: 1050 !important; /* Higher than navbar */
+}
+
+/* Specific notification styles that should appear above navbar */
+.custom-notification {
+  position: fixed;
+  top: 80px; /* Below navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.custom-notification.error {
+  background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+}
+
+.custom-notification.warning {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: #212529;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Dropdown menus should appear above navbar */
+.dropdown-menu {
+  z-index: 1002 !important;
+}
+
+/* Ensure modals and overlays appear above everything */
+.modal {
+  z-index: 1060 !important;
+}
+
+.modal-backdrop {
+  z-index: 1040 !important;
+}
+
+/* Tooltips and popovers */
+.tooltip {
+  z-index: 1070 !important;
+}
+
+.popover {
+  z-index: 1060 !important;
 }
