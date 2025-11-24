@@ -46,12 +46,6 @@ export const Profile = () => {
     <div className="profile-container">
       <h1>My Profile</h1>
       <div className="profile-card">
-        <img
-          src={getProfileImage()}
-          alt="Profile"
-          className="profile-photo"
-          onError={() => setImageError(true)}
-        />
         <div className="profile-details">
           <p><strong>Name:</strong> {userData.name}</p>
           <p><strong>Email:</strong> {userData.email}</p>

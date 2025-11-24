@@ -3,8 +3,6 @@ import Service from "../models/Service.js";
 import Category from "../models/Category.js";
 import Provider from "../models/Provider.js";
 
-
-
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ role: { $ne: "admin" } }).select("-password");
@@ -68,7 +66,6 @@ export const UnBlockUser = async (req, res) => {
     }
 };
 
-
 export const CreateCategory = async (req, res) => {
     try {
         const { name } = req.body;
@@ -102,10 +99,27 @@ export const getCategory = async (req, res) => {
     }
 };
 
+export const getAllProvidersEarnings = async (req, res) => {
+    try {
+        const result = await User.aggregate([
+            { $match: { role: "provider" } },
+            { $group: { _id: null, totalEarnings: { $sum: "$totalEarnings" } } }
+        ]);
+        const totalEarnings = result.length > 0 ? result[0].totalEarnings : 0;
+        res.status(200).json({ totalEarnings });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
 
-
-// generateStatistics()
-
-
-
-export default { getAllUsers, getAllServiceProviders, getAllService, BlockUser , CreateCategory , DeleteCategory , getCategory };
+export default { 
+  getAllUsers, 
+  getAllServiceProviders, 
+  getAllService, 
+  BlockUser, 
+  UnBlockUser, 
+  CreateCategory, 
+  DeleteCategory, 
+  getCategory, 
+  getAllProvidersEarnings 
+};

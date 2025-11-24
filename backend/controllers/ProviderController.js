@@ -215,6 +215,10 @@ export const getReviewsByProvider = async (req, res) => {
 };
 
 
+
+// chat with customer
+
+
 export default {
   createService,
   DeleteService,
@@ -226,3 +230,4 @@ export default {
   calculateAndUpdateProviderRating,
   getReviewsByProvider,
 };
+

@@ -79,18 +79,18 @@ const NavBar = ({ setEnableTransition }) => {
             {!isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <Link 
-                    className={`nav-link ${isActiveLink("/register")}`} 
-                    to="/register" 
+                  <Link
+                    className={`nav-link ${isActiveLink("/register")}`}
+                    to="/register"
                     onClick={() => setEnableTransition(true)}
                   >
                     Register
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link 
-                    className={`nav-link ${isActiveLink("/login")}`} 
-                    to="/login" 
+                  <Link
+                    className={`nav-link ${isActiveLink("/login")}`}
+                    to="/login"
                     onClick={() => setEnableTransition(true)}
                   >
                     Login
@@ -101,9 +101,9 @@ const NavBar = ({ setEnableTransition }) => {
               <>
                 {userInfo.role?.toLowerCase() === "customer" && (
                   <li className="nav-item">
-                    <Link 
-                      className={`nav-link ${isActiveLink("/service")}`} 
-                      to="/service" 
+                    <Link
+                      className={`nav-link ${isActiveLink("/service")}`}
+                      to="/service"
                       onClick={() => setEnableTransition(true)}
                     >
                       Services
@@ -111,18 +111,30 @@ const NavBar = ({ setEnableTransition }) => {
                   </li>
                 )}
                 <li className="nav-item">
-                  <Link 
-                    className={`nav-link ${isActiveLink("/profile")}`} 
-                    to="/profile" 
+                  <Link
+                    className={`nav-link ${isActiveLink("/profile")}`}
+                    to="/profile"
                     onClick={() => setEnableTransition(true)}
                   >
                     Profile
                   </Link>
                 </li>
+                {(userInfo.role?.toLowerCase() === "customer" ||
+                  userInfo.role?.toLowerCase() === "provider") && (
+                  <li className="nav-item">
+                    <Link
+                      className={`nav-link ${isActiveLink("/chat")}`}
+                      to="/chat"
+                      onClick={() => setEnableTransition(true)}
+                    >
+                      Chat
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item">
-                  <Link 
-                    className={`nav-link ${isActiveLink(getDashboardLink())}`} 
-                    to={getDashboardLink()} 
+                  <Link
+                    className={`nav-link ${isActiveLink(getDashboardLink())}`}
+                    to={getDashboardLink()}
                     onClick={() => setEnableTransition(true)}
                   >
                     Dashboard
@@ -130,14 +142,13 @@ const NavBar = ({ setEnableTransition }) => {
                 </li>
                 <li className="nav-item">
                   <div className="nav-user-info">
-                    <span className="user-welcome">Welcome, {userInfo.name || userInfo.email}</span>
+                    <span className="user-welcome">
+                      Welcome, {userInfo.name || userInfo.email}
+                    </span>
                   </div>
                 </li>
                 <li className="nav-item">
-                  <button
-                    className="btn btn-logout"
-                    onClick={handleLogout}
-                  >
+                  <button className="btn btn-logout" onClick={handleLogout}>
                     Logout
                   </button>
                 </li>

@@ -3,6 +3,16 @@ import axios from "axios";
 import "./ServiceProviderDashboard.css";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
+
 
 const ServiceProviderDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -11,6 +21,7 @@ const ServiceProviderDashboard = () => {
   const [providerCategory, setProviderCategory] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [chartMode, setChartMode] = useState("week"); 
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser && storedUser !== "undefined") {
@@ -170,6 +181,8 @@ const ServiceProviderDashboard = () => {
       console.error("Error deleting service:", error);
     }
   };
+
+  
 
   const resetForm = () => {
     setFormData({

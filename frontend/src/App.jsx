@@ -12,6 +12,7 @@ import Home from "./pages/Home.jsx";
 import Profile from "./pages/Profile.jsx"
 import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 import UpdatePassword from "./pages/Auth/UpdatePassword.jsx";
+import Chat from "./pages/chat.jsx";
 
 import NavBar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/service" element={<Service />} />
+        <Route paht="/chat" element={<Chat />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />

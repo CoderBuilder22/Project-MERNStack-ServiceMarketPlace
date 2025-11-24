@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaUsers, FaBoxOpen, FaTags, FaShoppingBag } from "react-icons/fa";
+import { FaUsers, FaBoxOpen, FaTags, FaShoppingBag, FaDollarSign } from "react-icons/fa";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -10,20 +10,23 @@ const AdminDashboard = () => {
   const [serviceProviders, setServiceProviders] = useState([]);
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [totalEarnings, setTotalEarnings] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [u, p, s, c] = await Promise.all([
+        const [u, p, s, c, e] = await Promise.all([
           axios.get("http://localhost:5000/api/admin/users"),
           axios.get("http://localhost:5000/api/admin/service-providers"),
           axios.get("http://localhost:5000/api/admin/services"),
           axios.get("http://localhost:5000/api/admin/categories"),
+          axios.get("http://localhost:5000/api/admin/Earnings"),
         ]);
         setUsers(u.data);
         setServiceProviders(p.data);
         setServices(s.data);
         setCategories(c.data);
+        setTotalEarnings(e.data.totalEarnings);
       } catch (err) {
         console.error(err);
       }
@@ -88,6 +91,13 @@ const AdminDashboard = () => {
           <FaTags size={25} className="text-danger mb-2" />
           <h5>Categories</h5>
           <h3>{categories.length}</h3>
+        </div>
+      </div>
+      <div className="col-md-3">
+        <div className="card p-3 shadow-sm">
+          <FaDollarSign size={25} className="text-warning mb-2" />
+          <h5>Total Providers Earnings</h5>
+          <h3>${totalEarnings.toLocaleString()}</h3>
         </div>
       </div>
     </div>
