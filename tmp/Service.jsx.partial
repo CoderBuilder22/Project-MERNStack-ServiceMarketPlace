@@ -1,0 +1,8 @@
+axios.get("http://localhost:5000/api/provider/service"),
+          axios.get("http://localhost:5000/api/admin/categories"),
+        ]);
+=======
+        const [servicesRes, categoriesRes] = await Promise.all([
+          axios.get("http://localhost:5000/api/admin/services"),
+          axios.get("http://localhost:5000/api/admin/categories"),
+        ]);

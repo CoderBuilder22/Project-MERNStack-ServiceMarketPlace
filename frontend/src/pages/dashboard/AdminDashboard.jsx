@@ -248,6 +248,32 @@ const AdminDashboard = () => {
     );
   };
 
+  const ServicesTable = () => (
+    <div className="table-responsive mt-4">
+      <h5>All Services</h5>
+      <table className="table align-middle table-striped">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Provider Name</th>
+            <th>Price</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {services.map((service) => (
+            <tr key={service._id}>
+              <td>{service.title}</td>
+              <td>{service.providerId ? service.providerId.name : "N/A"}</td>
+              <td>${service.price.toFixed(2)}</td>
+              <td>{service.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
   return (
     <div className="admin-dashboard">
       <div className="container my-4">
@@ -288,6 +314,14 @@ const AdminDashboard = () => {
             Categories
           </button>
         </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "services" ? "active" : ""}`}
+            onClick={() => setActiveTab("services")}
+          >
+            Services
+          </button>
+        </li>
       </ul>
 
         {/* Tab content */}
@@ -295,6 +329,7 @@ const AdminDashboard = () => {
         {activeTab === "users" && <UsersTable />}
         {activeTab === "providers" && <ProvidersTable />}
         {activeTab === "categories" && <CategoryTable />}
+        {activeTab === "services" && <ServicesTable />}
       </div>
     </div>
   );

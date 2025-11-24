@@ -25,7 +25,11 @@ export const getAllServiceProviders = async (req, res) => {
 
 export const getAllService = async (req, res) => {
     try {
-        const services = await Service.find();
+        const services = await Service.find().populate({
+            path: "providerId",
+            model: "User",
+            select: "name jobsCompleted Rating"
+        });
         res.status(200).json(services);
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });

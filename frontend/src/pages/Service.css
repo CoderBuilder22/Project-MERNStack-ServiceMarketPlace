@@ -510,6 +510,162 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Provider Info Styles */
+.provider-info {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.provider-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #4a7bbf, #8a6bbf);
+  border-radius: 2px 0 0 2px;
+}
+
+.provider-info p {
+  color: #ffffff !important;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.provider-info p:last-child {
+  margin-bottom: 0;
+}
+
+.provider-info p:first-child {
+  margin-top: 0;
+}
+
+.provider-info strong {
+  color: #e8f4ff !important;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  min-width: 120px;
+}
+
+.provider-info span {
+  color: #ffffff !important;
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+}
+
+/* Alternative layout - if you prefer a more compact design */
+.provider-info.compact {
+  padding: 0.75rem;
+}
+
+.provider-info.compact p {
+  margin: 0.4rem 0;
+  font-size: 0.85rem;
+}
+
+.provider-info.compact strong {
+  min-width: 100px;
+}
+
+/* Grid layout option */
+.provider-info.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.provider-info.grid-layout p {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.provider-info.grid-layout p:last-child {
+  border-bottom: none;
+}
+
+.provider-info.grid-layout strong {
+  min-width: auto;
+  text-align: left;
+}
+
+.provider-info.grid-layout span {
+  text-align: right;
+}
+
+/* Hover effects */
+.provider-info:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Responsive design for provider info */
+@media (max-width: 768px) {
+  .provider-info {
+    padding: 0.75rem;
+    margin: 0.75rem 0;
+  }
+  
+  .provider-info p {
+    font-size: 0.85rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .provider-info strong {
+    min-width: auto;
+    margin-right: 0;
+  }
+  
+  .provider-info span {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .provider-info.grid-layout p {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  
+  .provider-info.grid-layout span {
+    text-align: left;
+  }
+}
+
+/* Animation for provider info */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.provider-info {
+  animation: fadeInUp 0.4s ease-out;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .service-page {

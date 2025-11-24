@@ -13,14 +13,18 @@ export const Service = () => {
   const [failedImages, setFailedImages] = useState(new Set());
   const [searchParams] = useSearchParams();
   const [booked, setBooked] = useState({});
-  const [message, setMessage] = useState({ text: "", type: "", visible: false });
+  const [message, setMessage] = useState({
+    text: "",
+    type: "",
+    visible: false,
+  });
   const userInfo = JSON.parse(localStorage.getItem("userInfo")) || null;
 
   const showMessage = (text, type = "success") => {
     setMessage({ text, type, visible: true });
     // Auto-hide message after 5 seconds
     setTimeout(() => {
-      setMessage(prev => ({ ...prev, visible: false }));
+      setMessage((prev) => ({ ...prev, visible: false }));
     }, 5000);
   };
 
@@ -35,7 +39,10 @@ export const Service = () => {
       );
       setBooked((prev) => ({ ...prev, [serviceId]: true }));
       console.log(`Booking service with ID: ${serviceId}`);
-      showMessage("Service booked successfully! Check Your Bookings Dashboard", "success");
+      showMessage(
+        "Service booked successfully! Check Your Bookings Dashboard",
+        "success"
+      );
     } catch (error) {
       console.error("Error booking service:", error);
       showMessage("Failed to book service. Please try again.", "error");
@@ -44,7 +51,7 @@ export const Service = () => {
 
   // Close message when user clicks the close button
   const closeMessage = () => {
-    setMessage(prev => ({ ...prev, visible: false }));
+    setMessage((prev) => ({ ...prev, visible: false }));
   };
 
   useEffect(() => {
@@ -52,7 +59,7 @@ export const Service = () => {
       try {
         setLoading(true);
         const [servicesRes, categoriesRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/provider/service"),
+          axios.get("http://localhost:5000/api/admin/services"),
           axios.get("http://localhost:5000/api/admin/categories"),
         ]);
         setServiceData(servicesRes.data);
@@ -60,7 +67,10 @@ export const Service = () => {
       } catch (err) {
         console.error(err);
         setError("Failed to load services. Please try again later.");
-        showMessage("Failed to load services. Please try again later.", "error");
+        showMessage(
+          "Failed to load services. Please try again later.",
+          "error"
+        );
       } finally {
         setLoading(false);
       }
@@ -213,6 +223,25 @@ export const Service = () => {
                 {service.description?.length > 100 ? "..." : ""}
               </p>
               <div className="service-price">${service.price || "0"}</div>
+              {service.providerId && (
+                <div className="provider-info">
+                  <p>
+                    <strong>Provider:</strong>
+                    <span>{service.providerId.name}</span>
+                  </p>
+                  <p>
+                    <strong>Jobs Completed:</strong>
+                    <span>{service.providerId.jobsCompleted}</span>
+                  </p>
+                  <p>
+                    <strong>Rating:</strong>
+                    <span>
+                      {service.providerId.Rating}
+                      {" ⭐"}
+                    </span>
+                  </p>
+                </div>
+              )}
               {!booked[service._id] ? (
                 <button
                   className="book-button"
