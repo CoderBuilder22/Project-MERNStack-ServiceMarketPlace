@@ -1,5 +1,5 @@
 import express from 'express';
-import { bookService, cancelBooking, getMyBookings, addReview, markReservationCompleted } from '../controllers/CustomerController.js';
+import { bookService, cancelBooking, getMyBookings, addReview, markReservationCompleted, updateProfile } from '../controllers/CustomerController.js';
 
 const router = express.Router();
 
@@ -9,5 +9,7 @@ router.get('/bookings/:customerId', getMyBookings);
 
 router.post('/review', addReview);
 router.patch('/complete/:reservationId', markReservationCompleted);
+
+router.patch('/profile/:customerId', updateProfile);
 
 export default router;
