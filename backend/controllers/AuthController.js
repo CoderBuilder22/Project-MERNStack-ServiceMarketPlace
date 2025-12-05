@@ -120,7 +120,8 @@ export const ResetPassword = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    const restLink = `${process.env.FRONTEND_URL}update-password/${user._id}`;
+    const restLink = `https://myapp/reset-password/${user._id}`;
+
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",

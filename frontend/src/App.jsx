@@ -49,7 +49,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/service" element={<Service />} />
-        <Route paht="/chat" element={<Chat />} />
+        <Route path="/chat/:otherUserId" element={<Chat />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />

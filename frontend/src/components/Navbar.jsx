@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import "./Navbar.css";
 
 const NavBar = ({ setEnableTransition }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [userInfo, setUserInfo] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser && storedUser !== "undefined") {
@@ -17,6 +19,8 @@ const NavBar = ({ setEnableTransition }) => {
     return null;
   });
 
+  const [otherUserId, setOtherUserId] = useState(null);
+
   useEffect(() => {
     const handleStorageChange = () => {
       const storedUser = localStorage.getItem("userInfo");
@@ -28,6 +32,27 @@ const NavBar = ({ setEnableTransition }) => {
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
+
+  // Fetch other user for chat
+  useEffect(() => {
+    const fetchOtherUser = async () => {
+      if (!userInfo) return;
+
+      try {
+        const response = await axios.get("http://localhost:5000/api/admin/users");
+        const users = response.data;
+
+        const currentUserId = userInfo?._id || userInfo?.user?._id;
+        const otherUser = users.find((u) => u._id !== currentUserId);
+
+        if (otherUser) setOtherUserId(otherUser._id);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchOtherUser();
+  }, [userInfo]);
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -51,9 +76,7 @@ const NavBar = ({ setEnableTransition }) => {
 
   const isLoggedIn = !!userInfo;
 
-  const isActiveLink = (path) => {
-    return location.pathname === path ? "active" : "";
-  };
+  const isActiveLink = (path) => (location.pathname === path ? "active" : "");
 
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
@@ -120,11 +143,11 @@ const NavBar = ({ setEnableTransition }) => {
                   </Link>
                 </li>
                 {(userInfo.role?.toLowerCase() === "customer" ||
-                  userInfo.role?.toLowerCase() === "provider") && (
+                  userInfo.role?.toLowerCase() === "provider") && otherUserId && (
                   <li className="nav-item">
                     <Link
-                      className={`nav-link ${isActiveLink("/chat")}`}
-                      to="/chat"
+                      className={`nav-link ${isActiveLink(`/chat/${otherUserId}`)}`}
+                      to={`/chat/${otherUserId}`}
                       onClick={() => setEnableTransition(true)}
                     >
                       Chat
