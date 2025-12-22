@@ -194,5 +194,39 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+export const getProviderBooking = async (req, res) => {
+  const { customerId } = req.params;
+
+  try {
+    const bookings = await Reservation.find({ customerId })
+      .populate("providerId", "name email tel city")
+      .populate("serviceId", "title price photoURL");
+
+    const providersMap = new Map();
+
+    bookings.forEach(booking => {
+      const providerId = booking.providerId._id.toString();
+      if (!providersMap.has(providerId)) {
+        providersMap.set(providerId, {
+          provider: booking.providerId,
+          bookings: []
+        });
+      }
+      providersMap.get(providerId).bookings.push({
+        _id: booking._id,
+        date: booking.date,
+        status: booking.status,
+        service: booking.serviceId
+      });
+    });
+
+    const providers = Array.from(providersMap.values());
+
+    res.status(200).json(providers);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
 
 

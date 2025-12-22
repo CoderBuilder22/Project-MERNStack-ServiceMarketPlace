@@ -201,7 +201,7 @@ export const getReviewsByProvider = async (req, res) => {
     const reviews = await Review.find({ providerId })
       .populate({
         path: "customerId",
-        select: "name"   
+        select: "name"
       })
       .populate({
         path: "serviceId",
@@ -214,9 +214,40 @@ export const getReviewsByProvider = async (req, res) => {
   }
 };
 
+export const getAllCustomersBookings = async (req, res) => {
+  const { providerId } = req.params;
 
+  try {
+    const bookings = await Reservation.find({ providerId })
+      .populate("customerId", "name email tel city")
+      .populate("serviceId", "title price photoURL");
 
-// chat with customer
+    const customersMap = new Map();
+
+    bookings.forEach(booking => {
+      const customerId = booking.customerId._id.toString();
+      if (!customersMap.has(customerId)) {
+        customersMap.set(customerId, {
+          customer: booking.customerId,
+          bookings: []
+        });
+      }
+      customersMap.get(customerId).bookings.push({
+        _id: booking._id,
+        date: booking.date,
+        status: booking.status,
+        service: booking.serviceId
+      });
+    });
+
+    const customers = Array.from(customersMap.values());
+
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
 
 
 export default {
@@ -229,5 +260,6 @@ export default {
   rejectBooking,
   calculateAndUpdateProviderRating,
   getReviewsByProvider,
+  getAllCustomersBookings,
 };
 
