@@ -4,6 +4,7 @@ import Service from "../models/Service.js";
 import User from "../models/User.js";
 import Provider from "../models/Provider.js";
 import { calculateAndUpdateProviderRating } from "./ProviderController.js";
+import mongoose from "mongoose"
 
 export const bookService = async (req, res) => {
   const { serviceId, customerId } = req.body;
@@ -198,13 +199,15 @@ export const getProviderBooking = async (req, res) => {
   const { customerId } = req.params;
 
   try {
-    const bookings = await Reservation.find({ customerId })
+    const bookings = await Reservation.find({ customerId: mongoose.Types.ObjectId(customerId) })
       .populate("providerId", "name email tel city")
       .populate("serviceId", "title price photoURL");
 
     const providersMap = new Map();
 
     bookings.forEach(booking => {
+      if (!booking.providerId) return; // skip if provider is missing
+
       const providerId = booking.providerId._id.toString();
       if (!providersMap.has(providerId)) {
         providersMap.set(providerId, {
@@ -224,9 +227,7 @@ export const getProviderBooking = async (req, res) => {
 
     res.status(200).json(providers);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
-
-
-
