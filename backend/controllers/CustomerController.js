@@ -199,35 +199,47 @@ export const getProviderBooking = async (req, res) => {
   const { customerId } = req.params;
 
   try {
-    const bookings = await Reservation.find({ customerId: mongoose.Types.ObjectId(customerId) })
-      .populate("providerId", "name email tel city")
-      .populate("serviceId", "title price photoURL");
+    const bookings = await Reservation.find({
+      customerId: new mongoose.Types.ObjectId(customerId),
+    })
+      .populate({
+        path: "providerId",
+        select: "name email tel city role",
+      })
+      .populate({
+        path: "serviceId",
+        select: "title price photoURL",
+      });
+
+    if (!bookings.length) {
+      return res.status(200).json([]);
+    }
 
     const providersMap = new Map();
 
-    bookings.forEach(booking => {
-      if (!booking.providerId) return; // skip if provider is missing
+    bookings.forEach((booking) => {
+      if (!booking.providerId) return;
 
       const providerId = booking.providerId._id.toString();
+
       if (!providersMap.has(providerId)) {
         providersMap.set(providerId, {
           provider: booking.providerId,
-          bookings: []
+          bookings: [],
         });
       }
+
       providersMap.get(providerId).bookings.push({
         _id: booking._id,
         date: booking.date,
         status: booking.status,
-        service: booking.serviceId
+        service: booking.serviceId,
       });
     });
 
-    const providers = Array.from(providersMap.values());
-
-    res.status(200).json(providers);
+    res.status(200).json([...providersMap.values()]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    res.status(500).json({ message: "Server Error" });
   }
 };
