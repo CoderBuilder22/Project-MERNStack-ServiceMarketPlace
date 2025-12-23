@@ -46,6 +46,8 @@ const ServiceProviderDashboard = () => {
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [editingService, setEditingService] = useState(null);
+  const [editingDateBookingId, setEditingDateBookingId] = useState(null);
+  const [newDate, setNewDate] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -179,6 +181,27 @@ const ServiceProviderDashboard = () => {
       setServices(services.filter((s) => s._id !== serviceId));
     } catch (error) {
       console.error("Error deleting service:", error);
+    }
+  };
+
+  const handleUpdateBookingDate = async (bookingId) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/provider/booking/update-date/${bookingId}`,
+        {
+          newDate,
+          providerId: userInfo._id,
+        }
+      );
+      setBookings(
+        bookings.map((b) =>
+          b._id === bookingId ? { ...b, date: new Date(newDate) } : b
+        )
+      );
+      setEditingDateBookingId(null);
+      setNewDate("");
+    } catch (error) {
+      console.error("Error updating booking date:", error);
     }
   };
 
@@ -552,7 +575,18 @@ const ServiceProviderDashboard = () => {
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking._id}>
-                    <td>{new Date(booking.date).toLocaleDateString()}</td>
+                    <td>
+                      {editingDateBookingId === booking._id ? (
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={newDate}
+                          onChange={(e) => setNewDate(e.target.value)}
+                        />
+                      ) : (
+                        new Date(booking.date).toLocaleDateString()
+                      )}
+                    </td>
                     <td>
                       <span
                         className={`badge ${
@@ -575,24 +609,55 @@ const ServiceProviderDashboard = () => {
                     <td>{booking.customerId?.city || "N/A"}</td>
                     <td>{booking.customerId?.email || "N/A"}</td>
                     <td>{booking.serviceId?.title || "N/A"}</td>
-                    {booking.status === "pending" && (
-                      <>
-                        <td>
+                    <td>
+                      {editingDateBookingId === booking._id ? (
+                        <>
                           <button
-                            className="btn btn-accept btn-sm me-2"
-                            onClick={() => acceptBooking(booking._id)}
+                            className="btn btn-success btn-sm me-2"
+                            onClick={() => handleUpdateBookingDate(booking._id)}
                           >
-                            <i className="bi bi-check-circle me-1"></i> Accept
+                            Save
                           </button>
                           <button
-                            className="btn btn-danger btn-sm"
-                            onClick={() => rejectBooking(booking._id)}
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => {
+                              setEditingDateBookingId(null);
+                              setNewDate("");
+                            }}
                           >
-                            <i className="bi bi-x-circle me-1"></i> Refuse
+                            Cancel
                           </button>
-                        </td>
-                      </>
-                    )}
+                        </>
+                      ) : (
+                        <>
+                          {booking.status === "pending" && (
+                            <>
+                              <button
+                                className="btn btn-accept btn-sm me-2"
+                                onClick={() => acceptBooking(booking._id)}
+                              >
+                                <i className="bi bi-check-circle me-1"></i> Accept
+                              </button>
+                              <button
+                                className="btn btn-danger btn-sm me-2"
+                                onClick={() => rejectBooking(booking._id)}
+                              >
+                                <i className="bi bi-x-circle me-1"></i> Refuse
+                              </button>
+                            </>
+                          )}
+                          <button
+                            className="btn btn-info btn-sm"
+                            onClick={() => {
+                              setEditingDateBookingId(booking._id);
+                              setNewDate(new Date(booking.date).toISOString().split('T')[0]);
+                            }}
+                          >
+                            <i className="bi bi-calendar-event me-1"></i> Edit Date
+                          </button>
+                        </>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

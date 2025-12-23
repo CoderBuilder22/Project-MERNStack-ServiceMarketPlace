@@ -130,29 +130,25 @@ export const rejectBooking = async (req, res) => {
   }
 };
 
-export const CompleteBooking = async (req, res) =>{
-    const { bookingId } = req.params;
-    const { providerId } = req.body
+
+export const updateBookingDate = async (req, res) => {
+  const { bookingId } = req.params;
+  const { newDate, providerId } = req.body;
   try {
     const booking = await Reservation.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-
-    booking.status = "completed";
-    await booking.save();
-
-    const provider = await Provider.findById(providerId);
-    if (provider){
-        provider.jobsCompleted = (provider.jobsCompleted || 0) + 1;
-        await provider.save()
+    if (booking.providerId.toString() !== providerId) {
+      return res.status(403).json({ message: "Unauthorized: You can only update your own bookings" });
     }
-
-    res.status(200).json(booking);
+    booking.date = new Date(newDate);
+    await booking.save();
+    res.status(200).json({ message: "Booking date updated successfully", booking });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
-}
+};
 
 
 export const calculateAndUpdateProviderRating = async (providerId) => {
@@ -259,6 +255,7 @@ export default {
   getBookingsByProvider,
   acceptBooking,
   rejectBooking,
+  updateBookingDate,
   calculateAndUpdateProviderRating,
   getReviewsByProvider,
   getAllCustomersBookings,

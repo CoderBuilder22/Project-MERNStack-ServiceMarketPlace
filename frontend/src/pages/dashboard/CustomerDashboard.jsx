@@ -197,7 +197,7 @@ const CustomerDashboard = () => {
                   <div className="meta-item">
                     <span className="meta-label">Provider</span>
                     <span className="meta-value">
-                      {booking.serviceId?.providerId?.userId?.name || "Not Assigned"}
+                      {booking.serviceId?.providerId?.name || "Not Assigned"}
                     </span>
                   </div>
                 </div>

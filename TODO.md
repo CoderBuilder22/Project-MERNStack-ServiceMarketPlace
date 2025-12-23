@@ -1,12 +1,8 @@
-# Profile Update in Profile.jsx - TODO List
+# TODO: Add Function to Change Reservation Date in ProviderController
 
-- [ ] Add useState hooks for editable profile fields: name, email, city, tel, bio, skills, photoURL
-- [ ] Populate form fields from existing userData on fetch
-- [ ] Create editable form inputs for these fields in JSX
-- [ ] Add change handlers to update form state on user input
-- [ ] Add a "Save" button to submit the form
-- [ ] Implement form submit handler to send PATCH request to backend `/profile/:customerId`
-- [ ] Handle loading, success, and error states during submission
-- [ ] Update userData state after successful profile update
-- [ ] Show messages for success or error to user
-- [ ] Test the profile update flow end-to-end
+## Steps to Complete:
+- [x] Add `updateBookingDate` function in `backend/controllers/ProviderController.js`
+- [x] Add the function to the exports in `ProviderController.js`
+- [x] Add new route `PUT /booking/update-date/:bookingId` in `backend/routes/ProviderRoutes.js`
+- [ ] Test the new endpoint (followup step)
+- [ ] Verify authorization (followup step)

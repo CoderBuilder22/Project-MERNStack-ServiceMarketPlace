@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { createService, DeleteService, UpdateService, getServicesByProvider, getServicesById,getAllServices,getBookingsByProvider,acceptBooking,rejectBooking,getReviewsByProvider,getAllCustomersBookings } from '../controllers/ProviderController.js';
+import { createService, DeleteService, UpdateService, getServicesByProvider, getServicesById,getAllServices,getBookingsByProvider,acceptBooking,rejectBooking,updateBookingDate,getReviewsByProvider,getAllCustomersBookings } from '../controllers/ProviderController.js';
 
 const router = express.Router();
 const upload = multer({ dest: 'public/images/' });
@@ -14,6 +14,7 @@ router.get('/service', getAllServices);
 router.get('/bookings/provider/:providerId', getBookingsByProvider);
 router.put('/booking/accept/:bookingId', acceptBooking);
 router.put('/booking/reject/:bookingId', rejectBooking);
+router.put('/booking/update-date/:bookingId', updateBookingDate);
 router.get('/reviews/:providerId',getReviewsByProvider);
 router.get('/customers/:providerId', getAllCustomersBookings);
 
