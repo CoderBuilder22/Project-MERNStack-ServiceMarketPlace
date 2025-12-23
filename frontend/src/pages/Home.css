@@ -152,7 +152,7 @@
 
 /* Feature Cards */
 .feature-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f1419 100%);
   border-radius: 20px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -176,6 +176,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+
 }
 
 .feature-card:hover .feature-icon {
@@ -183,18 +184,18 @@
 }
 
 .feature-title {
-  color: #2d3748 !important;
+  color: white;
   font-weight: 700;
 }
 
 .feature-description {
-  color: #718096 !important;
+  color: #adb5c3 !important;
   line-height: 1.7;
 }
 
 /* Service Cards - Updated for white text */
 .service-card {
-  background: rgba(30, 58, 95, 0.8);
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f1419 100%);
   border-radius: 20px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -288,7 +289,7 @@
 
 /* Category Cards */
 .category-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f1419 100%);
   border-radius: 20px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -316,12 +317,12 @@
 }
 
 .category-name {
-  color: #2d3748 !important;
+  color: #fcfcfc !important;
   font-weight: 700;
 }
 
 .category-description {
-  color: #718096 !important;
+  color: #fcfcfc !important;
   line-height: 1.6;
 }
 
