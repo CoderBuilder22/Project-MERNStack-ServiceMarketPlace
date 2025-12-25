@@ -255,17 +255,16 @@ const Home = () => {
               <div className="feature-card card border-0 shadow-lg h-100 hover-lift">
                 <div className="card-body text-center p-4 p-xl-5">
                   <div className="feature-icon-wrapper mb-4">
-                    <div className="feature-icon bg-warning bg-opacity-10 rounded-3">
-                      <span className="fs-1">🔒</span>
+                    <div className="feature-icon bg-primary bg-opacity-10 rounded-3">
+                      <span className="fs-1">⭐</span>
                     </div>
                   </div>
                   <h5 className="feature-title fw-bold fs-4 mb-3">
-                    Secure Payments
+                    Reviews & Ratings
                   </h5>
                   <p className="feature-description text-muted fs-6 lh-lg mb-0">
-                    Pay with confidence through our encrypted payment system.
-                    Your financial information is protected with bank-level
-                    security measures.
+                    Make informed decisions by reading real client reviews and
+                    ratings for every professional before booking a service.
                   </p>
                 </div>
               </div>

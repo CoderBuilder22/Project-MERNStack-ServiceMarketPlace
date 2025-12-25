@@ -194,12 +194,6 @@ const CustomerDashboard = () => {
                       ${booking.serviceId?.price || "0"}
                     </span>
                   </div>
-                  <div className="meta-item">
-                    <span className="meta-label">Provider</span>
-                    <span className="meta-value">
-                      {booking.serviceId?.providerId?.name || "Not Assigned"}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="booking-actions">

@@ -205,9 +205,6 @@ export const Service = () => {
                 }}
                 style={{ opacity: 0, transition: "opacity 0.3s ease" }}
               />
-              <div className="image-overlay">
-                <button>View Details</button>
-              </div>
               {failedImages.has(service._id) && (
                 <div className="fallback-image">
                   {service.title ? service.title.charAt(0).toUpperCase() : "S"}
