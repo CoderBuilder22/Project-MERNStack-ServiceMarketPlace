@@ -132,7 +132,7 @@ const Home = () => {
               <div className="hero-content">
                 <h1 className="display-3 fw-bold mb-4 hero-title">
                   Find Trusted Experts for Any Job on{" "}
-                  <span className="text-primary">ServiceHub</span>
+                  <span className="text-primary">KHADAMNI</span>
                 </h1>
                 <p className="lead mb-4 fs-5 hero-subtitle">
                   Hire skilled professionals or offer your services — all in one

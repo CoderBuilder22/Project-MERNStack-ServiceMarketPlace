@@ -82,7 +82,7 @@ const NavBar = ({ setEnableTransition }) => {
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          ServiceHub
+          KHADAMNI
         </Link>
 
         <button
