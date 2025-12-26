@@ -202,7 +202,7 @@ const Home = () => {
         <div className="container position-relative z-2">
           <div className="text-center mb-5">
             <h2 className="section-title fw-bold display-5 mb-3">
-              Why Choose ServiceHub?
+              Why Choose KHADAMNI ?
             </h2>
             <p
               className="section-subtitle lead text-light opacity-75 mx-auto"
