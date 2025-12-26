@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h3>Contact Us</h3>
-          <p>Email: info@servicehub.com</p>
+          <p>Email: info@KHADAMNI.com</p>
           <p>Phone: +216 (555) 123-4567</p>
         </div>
         <div className="footer-section">
